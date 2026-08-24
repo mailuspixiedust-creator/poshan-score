@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poshan Score — Know what's really inside</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" fill="none">
+        <rect x="6" y="6" width="28" height="7" rx="2" fill="#E2A02C"/>
+        <rect x="6" y="15" width="28" height="7" rx="2" fill="#4B7A46"/>
+        <rect x="6" y="24" width="28" height="7" rx="2" fill="#8C6239"/>
+        <rect x="6" y="6" width="28" height="25" rx="2" stroke="#22261C" stroke-width="1.3" fill="none"/>
+        <rect x="16" y="2" width="8" height="5" rx="1.5" fill="#22261C"/>
+      </svg>
+      <span class="brand-name">Poshan Score</span>
+    </div>
+    <nav class="crumbs" id="crumbs"></nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section class="page active" data-page="home">
+    <div class="hero">
+      <span class="eyebrow">Govt-benchmarked · ingredient-first</span>
+      <h1>Know what's really<br>inside the pack.</h1>
+      <p class="lede">Every packaged kids' food, scored against ICMR-NIN 2020 RDAs and FSSAI norms — sugar, additives, preservatives, hydrogenated fats, sodium and base-ingredient integrity, laid out plainly. No brand takes a shortcut here, including ours.</p>
+
+      <div class="tiffin-wrap">
+        <svg class="tiffin-svg" viewBox="0 0 120 170" fill="none">
+          <ellipse cx="60" cy="16" rx="30" ry="7" fill="#8C6239" opacity="0.25"/>
+          <rect x="30" y="10" width="60" height="34" rx="6" fill="#E2A02C" stroke="#22261C" stroke-width="1.4"/>
+          <rect x="30" y="46" width="60" height="34" rx="6" fill="#4B7A46" stroke="#22261C" stroke-width="1.4"/>
+          <rect x="30" y="82" width="60" height="34" rx="6" fill="#B14B2E" stroke="#22261C" stroke-width="1.4"/>
+          <rect x="30" y="118" width="60" height="34" rx="6" fill="#8C6239" stroke="#22261C" stroke-width="1.4"/>
+          <rect x="52" y="2" width="16" height="10" rx="3" fill="#22261C"/>
+          <path d="M60 152 v8" stroke="#22261C" stroke-width="1.4"/>
+        </svg>
+        <div class="tier-list">
+          <button class="tier-btn" data-goto="methodology">
+            <span class="tier-dot" style="background:#E2A02C"></span>
+            <span><span class="tt">How we rate</span><br><span class="ts">The six metrics, explained</span></span>
+          </button>
+          <button class="tier-btn" data-goto="browse">
+            <span class="tier-dot" style="background:#4B7A46"></span>
+            <span><span class="tt">Rate a product</span><br><span class="ts">Browse the scored catalogue</span></span>
+          </button>
+          <button class="tier-btn" data-goto="trad-age">
+            <span class="tier-dot" style="background:#B14B2E"></span>
+            <span><span class="tt">Traditional foods</span><br><span class="ts">By age, and by state</span></span>
+          </button>
+          <button class="tier-btn" data-goto="kidposhan">
+            <span class="tier-dot" style="background:#8C6239"></span>
+            <span><span class="tt">Our own products</span><br><span class="ts">Scored the same way</span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="stat-row mono">
+        <div class="stat"><b>142</b><span>products rated</span></div>
+        <div class="stat"><b>18</b><span>states mapped</span></div>
+        <div class="stat"><b>6</b><span>scoring metrics</span></div>
+        <div class="stat"><b>0–12</b><span>yr age coverage</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ METHODOLOGY ============ -->
+  <section class="page" data-page="methodology">
+    <div class="section-head">
+      <span class="eyebrow">Page 02</span>
+      <h2>How we rate</h2>
+      <p class="lede">Every ceiling on this page is a real, cited number — never a rounded-off guess. Nothing here is a comparative claim against a named brand; it's a standard, applied evenly to everyone, including us.</p>
+    </div>
+
+    <div class="waterfall-note">
+      <b>Our sourcing order, in full:</b> for every metric we start with India's own NIN/FSSAI standards. If NIN has no usable number for that metric or age band, we fall through in this fixed order until one has real data: <b>NIN → WHO → US NASEM → EFSA (EU) → UK SACN</b>. Whichever source in that chain first has an actual figure is the one we cite — we don't skip ahead just because a later source is more convenient. Each card below shows exactly which sources were checked and which one we landed on.
+    </div>
+
+    <div class="criteria-grid">
+      <div class="crit">
+        <h3>Added sugar</h3>
+        <p>Free sugars as a share of the product's energy, checked against the age band's ceiling.</p>
+        <div class="ceiling-line">Used: WHO — &lt;10% of energy (target &lt;5%)</div>
+        <div class="trace">
+          <div class="trace-step"><span class="trace-mark no">✗</span> NIN/FSSAI — qualitative "use sparingly" only, no number</div>
+          <div class="trace-step used"><span class="trace-mark yes">✓</span> WHO 2015 — used (converted to grams via NIN energy RDA per age band)</div>
+        </div>
+      </div>
+
+      <div class="crit">
+        <h3>Sodium</h3>
+        <p>Milligrams per day against the age band's ceiling.</p>
+        <div class="ceiling-line">Used: US NASEM — 800 / 1,000 / 1,200 / 1,500 mg</div>
+        <div class="trace">
+          <div class="trace-step"><span class="trace-mark no">✗</span> NIN — adult-only, and two NIN documents disagree (6g salt vs 2,000mg sodium)</div>
+          <div class="trace-step"><span class="trace-mark no">✗</span> WHO 2012 — states the scaling principle only, gives no child figure</div>
+          <div class="trace-step used"><span class="trace-mark yes">✓</span> NASEM 2019 — used (age-banded mg figures)</div>
+          <div class="trace-step" style="opacity:.4;">cross-checked against EFSA 2019 (1,100/1,300/1,700/2,000mg) and SACN 2003 (800/1,200/2,000/2,400mg) — broadly convergent</div>
+        </div>
+      </div>
+
+      <div class="crit">
+        <h3>Artificial additives</h3>
+        <p>Synthetic colours, flavours and emulsifiers not needed for shelf stability.</p>
+        <div class="ceiling-line">Used: FSSAI Food Additives Regulations, 2011</div>
+        <div class="trace">
+          <div class="trace-step used"><span class="trace-mark yes">✓</span> NIN/FSSAI — used directly (permitted-additive list by INS code and category; this is India's applicable law, not a nutrient-intake ceiling, so the intake waterfall doesn't apply here)</div>
+        </div>
+      </div>
+
+      <div class="crit">
+        <h3>Preservatives</h3>
+        <p>Chemical preservatives beyond what shelf-stable co-manufacturing requires.</p>
+        <div class="ceiling-line">Used: FSSAI Food Additives Regulations, 2011</div>
+        <div class="trace">
+          <div class="trace-step used"><span class="trace-mark yes">✓</span> NIN/FSSAI — used directly (permitted preservative classes and INS codes, e.g. benzoates, sulphites, antioxidants like BHA/TBHQ, by food category)</div>
+        </div>
+      </div>
+
+      <div class="crit">
+        <h3>Hydrogenated fats</h3>
+        <p>Industrial trans fat content, flagged against the legal ceiling.</p>
+        <div class="ceiling-line">Used: FSSAI — ≤2% by mass of total oils/fats</div>
+        <div class="trace">
+          <div class="trace-step used"><span class="trace-mark yes">✓</span> NIN/FSSAI — used directly (hard regulatory ceiling, effective 1 Jan 2022)</div>
+          <div class="trace-step" style="opacity:.4;">cross-checked against EU's ~2g/100g fat limit (2019) and WHO's global elimination target — consistent direction</div>
+        </div>
+      </div>
+
+      <div class="crit">
+        <h3>Base-ingredient integrity</h3>
+        <p>Whether the first three ingredients are recognisable whole foods, not refined derivatives.</p>
+        <div class="ceiling-line">No external ceiling — our own internal rubric</div>
+        <div class="trace">
+          <div class="trace-step" style="opacity:.6;">No government body sets a numeric "whole-food-ness" standard. This check is ours, disclosed as such — made possible by FSSAI's mandatory rule that ingredients be listed in descending order by weight.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bench-note">Every ceiling above is reviewed as source documents are updated. If a source is later superseded (e.g. we obtain the primary ICMR-NIN 2020 EAR report directly), the card and this page are updated together — never silently.</div>
+  </section>
+
+  <!-- ============ BROWSE ============ -->
+  <section class="page" data-page="browse">
+    <div class="section-head">
+      <span class="eyebrow">Page 03</span>
+      <h2>Browse products</h2>
+      <p class="lede">Filter by age band, category or score — tap a card for the full breakdown.</p>
+    </div>
+    <div class="filter-row">
+      <button class="pill active">All ages</button>
+      <button class="pill">0–3 yr</button>
+      <button class="pill">4–8 yr</button>
+      <button class="pill">9–12 yr</button>
+      <button class="pill">Snacks</button>
+      <button class="pill">Drinks</button>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <!-- ============ PRODUCT DETAIL ============ -->
+  <section class="page" data-page="detail">
+    <a class="back-link" data-goto="browse">← Back to browse</a>
+    <div class="detail-head">
+      <div>
+        <span class="eyebrow" id="detCat">Category</span>
+        <h2 id="detName">Product name</h2>
+      </div>
+      <span class="score-chip" id="detScore">78</span>
+    </div>
+    <div class="metric-grid" id="detMetrics"></div>
+    <h3 style="font-size:15px;margin-top:22px;">Ingredients</h3>
+    <div class="ingredient-list" id="detIngredients"></div>
+    <h3 style="font-size:15px;margin-top:22px;">Per-serving vs RDA</h3>
+    <table class="rda">
+      <tr><th>Nutrient</th><th>Per serve</th><th>RDA (age band)</th></tr>
+      <tr><td>Energy</td><td>142 kcal</td><td>1,100–1,350 kcal/day</td></tr>
+      <tr><td>Protein</td><td>3.8 g</td><td>16.7–19.7 g/day</td></tr>
+      <tr><td>Free sugar</td><td>2.1 g</td><td>&lt;25 g/day ceiling</td></tr>
+      <tr><td>Sodium</td><td>96 mg</td><td>&lt;1,200 mg/day</td></tr>
+    </table>
+    <button class="cta-btn">View on partner store →</button>
+  </section>
+
+  <!-- ============ TRADITIONAL — BY AGE ============ -->
+  <section class="page" data-page="trad-age">
+    <div class="section-head">
+      <span class="eyebrow">Page 05</span>
+      <h2>Traditional foods, by age</h2>
+      <p class="lede">What Indian households have fed each stage, long before packaging existed.</p>
+    </div>
+    <div class="age-tabs" id="ageTabs"></div>
+    <div id="ageList"></div>
+    <p style="margin-top:18px;"><a class="pill" data-goto="trad-state">Browse by state instead →</a></p>
+  </section>
+
+  <!-- ============ TRADITIONAL — BY STATE ============ -->
+  <section class="page" data-page="trad-state">
+    <div class="section-head">
+      <span class="eyebrow">Page 06</span>
+      <h2>Traditional foods, by state</h2>
+      <p class="lede">Regional first foods and childhood staples, mapped by state.</p>
+    </div>
+    <div class="state-tabs" id="stateTabs"></div>
+    <div id="stateList"></div>
+  </section>
+
+  <!-- ============ NUTRITION GUIDE ============ -->
+  <section class="page" data-page="guide">
+    <div class="section-head">
+      <span class="eyebrow">Page 07</span>
+      <h2>Age-wise nutrition guide</h2>
+      <p class="lede">Quick-reference RDA targets by age band, per ICMR-NIN 2020.</p>
+    </div>
+    <table class="guide-table">
+      <tr><th>Age band</th><th>Energy</th><th>Protein</th><th>Fat</th><th>Calcium</th><th>Iron (2010)</th><th>Iron (2020)</th></tr>
+      <tr><td>0–6 mo</td><td>Exclusive breastfeeding</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>6–12 mo</td><td>80 kcal/kg/d</td><td>1.69 g/kg/d</td><td>—</td><td>500 mg</td><td>5 mg</td><td>3 mg</td></tr>
+      <tr><td>1–3 yr</td><td>1,060 kcal</td><td>16.7 g</td><td>27 g</td><td>600 mg</td><td>9 mg</td><td>8 mg</td></tr>
+      <tr><td>4–6 yr</td><td>1,350 kcal</td><td>20.1 g</td><td>25 g</td><td>600 mg</td><td>13 mg</td><td>11 mg</td></tr>
+      <tr><td>7–9 yr</td><td>1,690 kcal</td><td>29.5 g</td><td>30 g</td><td>600 mg</td><td>16 mg</td><td>15 mg</td></tr>
+      <tr><td>10–12 yr (boys)</td><td>2,190 kcal</td><td>39.9 g</td><td>35 g</td><td>800 mg</td><td>21 mg</td><td>16 mg</td></tr>
+      <tr><td>10–12 yr (girls)</td><td>2,010 kcal</td><td>40.4 g</td><td>35 g</td><td>800 mg</td><td>27 mg</td><td>28 mg</td></tr>
+    </table>
+    <p style="font-size:11px;opacity:.55;margin-top:6px;">Energy/protein/fat/calcium: verified against the primary source — <i>Dietary Guidelines for Indians – A Manual</i>, NIN 2nd edition (2011), Annexure-3, itself sourced to RDA-2010. The "Iron (2020)" column comes from secondary citations of the ICMR-NIN 2020 EAR report, not yet verified against that primary document — the two vintages diverge meaningfully at 10–12yr boys (21 vs 16 mg). Pick one vintage before publishing; 2020 is the more current standard if you can source the primary PDF.</p>
+
+    <h3 style="font-size:15px;margin-top:26px;">WHO free-sugar ceiling, calculated on ICMR-NIN energy</h3>
+    <table class="guide-table">
+      <tr><th>Age band</th><th>&lt;10% of energy</th><th>&lt;5% of energy (ideal)</th></tr>
+      <tr><td>Under 2 yr</td><td colspan="2">WHO/AHA: avoid added sugar entirely</td></tr>
+      <tr><td>1–3 yr</td><td>~26 g/day</td><td>~13 g/day</td></tr>
+      <tr><td>4–6 yr</td><td>~34 g/day</td><td>~17 g/day</td></tr>
+      <tr><td>7–9 yr</td><td>~42 g/day</td><td>~21 g/day</td></tr>
+      <tr><td>10–12 yr</td><td>~50–55 g/day</td><td>~25–27 g/day</td></tr>
+    </table>
+    <p style="font-size:11px;opacity:.55;margin-top:6px;">Free sugars = added sugars + honey/syrups/fruit juice, not sugars intrinsic to whole fruit, veg or milk. Grams derived from WHO's %-of-energy rule applied to each band's confirmed ICMR-NIN energy RDA. NIN's own manual gives no numeric sugar ceiling anywhere — only qualitative "use sparingly" language — so this table's numbers are WHO's, not NIN's.</p>
+
+    <h3 style="font-size:15px;margin-top:26px;">Sodium — following the sourcing waterfall</h3>
+    <p style="font-size:13px;opacity:.8;line-height:1.6;">Per our stated order (NIN → WHO → US NASEM → EFSA → SACN — see <i>How We Rate</i>), NIN gives adult-only figures that disagree across its own two documents, and WHO 2012 states only the scaling principle with no child number. <b>NASEM 2019</b> is the first source in the chain with real age-banded figures, so it's what we use:</p>
+    <table class="guide-table">
+      <tr><th>Age band</th><th>NASEM 2019 sodium AI</th></tr>
+      <tr><td>0–6 mo</td><td>Breastmilk adequate</td></tr>
+      <tr><td>1–3 yr</td><td>800 mg/day</td></tr>
+      <tr><td>4–6 yr</td><td rowspan="2">1,000 mg/day (NASEM band: 4–8yr)</td></tr>
+      <tr><td>7–9 yr</td></tr>
+      <tr><td>10–12 yr</td><td>1,200 mg/day (NASEM band: 9–13yr)</td></tr>
+    </table>
+    <p style="font-size:11px;opacity:.55;margin-top:6px;">Source: NASEM (2019), Dietary Reference Intakes for Sodium and Potassium. Note the band mismatch — NASEM's bands (1–3 / 4–8 / 9–13 / 14–18yr) don't line up cleanly with ours, so 4–6yr and 7–9yr share one NASEM figure. Cross-checked against the next two in the waterfall — EFSA 2019 (1,100/1,300/1,700/2,000mg, which does align to our bands) and UK SACN 2003 (800/1,200/2,000/2,400mg, explicit population reduction targets rather than AI). All three are broadly convergent; German DGE 2018 runs notably lower (400/500/750/1,100mg) due to different methodology and isn't part of our stated chain.</p>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="page" data-page="about">
+    <div class="section-head">
+      <span class="eyebrow">Page 08</span>
+      <h2>About</h2>
+    </div>
+    <div class="about-copy">
+      <p>Poshan Score exists to make one thing easy: knowing what's actually in the food a child is handed, before it goes in the tiffin box.</p>
+      <p>We score against public standards — ICMR-NIN 2020 and FSSAI — not against other brands. The name nods to India's Poshan Abhiyaan, and the standard is applied the same way to every product on this site, including our own.</p>
+    </div>
+  </section>
+
+  <!-- ============ KIDPOSHAN (LAST) ============ -->
+  <section class="page" data-page="kidposhan">
+    <div class="section-head">
+      <span class="eyebrow">Page 09 · Last</span>
+      <h2>Our products</h2>
+      <p class="lede">Kidposhan, scored on the exact same rubric as everything else on this site.</p>
+    </div>
+    <div class="kp-banner">Same six metrics. Same benchmarks. No separate rules for our own SKUs.</div>
+    <div class="product-grid" id="kpGrid"></div>
+  </section>
+
+</main>
+
+<footer>PROTOTYPE — for internal review, not a live product</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

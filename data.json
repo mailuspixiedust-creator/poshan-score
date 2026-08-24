@@ -1,0 +1,480 @@
+{
+  "products": [
+    {
+      "name": "Millet Choco Rounds",
+      "cat": "Snacks · 4–8 yr",
+      "score": 82,
+      "sugar": 70,
+      "add": 90,
+      "pres": 60,
+      "fat": 95,
+      "sod": 65,
+      "base": 85,
+      "ingredients": [
+        "Finger millet",
+        "Jaggery",
+        "Cocoa",
+        "Ghee",
+        "Whole wheat",
+        "Natural vanilla"
+      ],
+      "flags": [
+        "High cocoa solids ok"
+      ]
+    },
+    {
+      "name": "Fruit & Oat Bar",
+      "cat": "Snacks · 1–3 yr",
+      "score": 75,
+      "sugar": 60,
+      "add": 80,
+      "pres": 70,
+      "fat": 88,
+      "sod": 72,
+      "base": 80,
+      "ingredients": [
+        "Rolled oats",
+        "Dates",
+        "Dried mango",
+        "Sunflower seeds",
+        "Cinnamon"
+      ],
+      "flags": [
+        "Added sugar: moderate"
+      ]
+    },
+    {
+      "name": "Tomato Veggie Puffs",
+      "cat": "Snacks · 4–8 yr",
+      "score": 48,
+      "sugar": 55,
+      "add": 30,
+      "pres": 35,
+      "fat": 40,
+      "sod": 38,
+      "base": 45,
+      "ingredients": [
+        "Refined flour",
+        "Palm oil",
+        "Tomato powder",
+        "MSG",
+        "Artificial colour 110"
+      ],
+      "flags": [
+        "Artificial colour",
+        "High sodium"
+      ]
+    },
+    {
+      "name": "Ragi Porridge Mix",
+      "cat": "Cereal · 6–12 mo",
+      "score": 91,
+      "sugar": 85,
+      "add": 96,
+      "pres": 92,
+      "fat": 94,
+      "sod": 88,
+      "base": 95,
+      "ingredients": [
+        "Finger millet flour",
+        "Dried banana",
+        "Cardamom"
+      ],
+      "flags": [
+        "Clean label"
+      ]
+    },
+    {
+      "name": "Instant Fruit Drink Mix",
+      "cat": "Drinks · 4–8 yr",
+      "score": 31,
+      "sugar": 20,
+      "add": 25,
+      "pres": 40,
+      "fat": 60,
+      "sod": 50,
+      "base": 22,
+      "ingredients": [
+        "Sugar",
+        "Citric acid",
+        "Artificial flavour",
+        "Colour 122",
+        "Preservative 211"
+      ],
+      "flags": [
+        "High added sugar",
+        "Artificial colour"
+      ]
+    },
+    {
+      "name": "Vegetable Millet Khichdi",
+      "cat": "Meal · 1–3 yr",
+      "score": 87,
+      "sugar": 90,
+      "add": 92,
+      "pres": 85,
+      "fat": 88,
+      "sod": 78,
+      "base": 90,
+      "ingredients": [
+        "Foxtail millet",
+        "Moong dal",
+        "Mixed vegetables",
+        "Cumin",
+        "Ghee"
+      ],
+      "flags": [
+        "Clean label"
+      ]
+    },
+    {
+      "name": "Chocos (Kellogg's)",
+      "cat": "Cereal · 4–8 yr",
+      "score": 41,
+      "sugar": 22,
+      "add": 20,
+      "pres": 45,
+      "fat": 78,
+      "sod": 55,
+      "base": 28,
+      "ingredients": [
+        "Wheat flour (atta)",
+        "Refined wheat flour (maida)",
+        "Sugar",
+        "Cocoa solids",
+        "Palmolein oil",
+        "Iodized salt",
+        "Caramel colour (INS 150d)",
+        "Antioxidant (INS 320)"
+      ],
+      "flags": [
+        "High sugar",
+        "Synthetic colour",
+        "Maida-heavy"
+      ]
+    },
+    {
+      "name": "2-Minute Masala Noodles (Maggi)",
+      "cat": "Meal · 4–8 yr",
+      "score": 43,
+      "sugar": 65,
+      "add": 25,
+      "pres": 50,
+      "fat": 75,
+      "sod": 20,
+      "base": 20,
+      "ingredients": [
+        "Refined wheat flour (maida)",
+        "Palm oil",
+        "Iodized salt",
+        "Wheat gluten",
+        "Hydrolysed groundnut protein",
+        "Sugar",
+        "Caramel colour (150d)",
+        "Flavour enhancer (635)"
+      ],
+      "flags": [
+        "High sodium",
+        "Maida-heavy",
+        "Flavour enhancer"
+      ]
+    },
+    {
+      "name": "Soupy Noodles Mast Masala (Knorr)",
+      "cat": "Meal · 4–8 yr",
+      "score": 29,
+      "sugar": 60,
+      "add": 15,
+      "pres": 15,
+      "fat": 55,
+      "sod": 12,
+      "base": 18,
+      "ingredients": [
+        "Refined wheat flour (maida)",
+        "Palm oil",
+        "Iodized salt",
+        "Antioxidant (INS 319 / TBHQ)",
+        "Sugar",
+        "Hydrolyzed vegetable protein",
+        "Dehydrated vegetables (trace)",
+        "Flavour enhancers (627, 631)"
+      ],
+      "flags": [
+        "Very high sodium",
+        "Preservative-like antioxidant",
+        "Low real-vegetable content"
+      ]
+    },
+    {
+      "name": "Magic Masala Noodles (Yippee)",
+      "cat": "Meal · 4–8 yr",
+      "score": 53,
+      "sugar": 62,
+      "add": 45,
+      "pres": 55,
+      "fat": 78,
+      "sod": 35,
+      "base": 42,
+      "ingredients": [
+        "Refined wheat flour (maida)",
+        "Refined palm oil",
+        "Iodized salt",
+        "Dehydrated vegetables (beans, carrot, onion, cabbage)",
+        "Sugar",
+        "Hydrolyzed vegetable protein",
+        "Flavour enhancers (627, 631)",
+        "Added vitamins & minerals"
+      ],
+      "flags": [
+        "Maida-heavy",
+        "Fortified with vitamins",
+        "Moderate sodium"
+      ]
+    },
+    {
+      "name": "Bournvita (Cadbury)",
+      "cat": "Health drink · 4–12 yr",
+      "score": 43,
+      "sugar": 18,
+      "add": 20,
+      "pres": 55,
+      "fat": 80,
+      "sod": 60,
+      "base": 25,
+      "ingredients": [
+        "Cereal extract (barley, wheat)",
+        "Soluble corn fibre",
+        "Cocoa solids",
+        "Sugar",
+        "Starch",
+        "Caramel colour (150c)",
+        "Maltodextrin",
+        "Wheat gluten",
+        "Liquid glucose",
+        "Emulsifiers (322, 471)",
+        "Milk solids"
+      ],
+      "flags": [
+        "High sugar",
+        "Synthetic colour",
+        "FSSAI-flagged 'health drink' labelling"
+      ]
+    }
+  ],
+  "kpProducts": [
+    {
+      "name": "Ragi Podi",
+      "cat": "Snack mix · 1–8 yr",
+      "score": 89,
+      "sugar": 88,
+      "add": 96,
+      "pres": 90,
+      "fat": 92,
+      "sod": 80,
+      "base": 92,
+      "ingredients": [
+        "Finger millet",
+        "Roasted lentils",
+        "Curry leaf",
+        "Sesame",
+        "Rock salt"
+      ],
+      "flags": [
+        "Clean label"
+      ]
+    },
+    {
+      "name": "Millet Porridge Mix",
+      "cat": "Cereal · 6–12 mo",
+      "score": 92,
+      "sugar": 90,
+      "add": 97,
+      "pres": 93,
+      "fat": 95,
+      "sod": 90,
+      "base": 94,
+      "ingredients": [
+        "Foxtail millet flour",
+        "Dried dates",
+        "Cardamom"
+      ],
+      "flags": [
+        "Clean label"
+      ]
+    },
+    {
+      "name": "Instant Millet Noodles",
+      "cat": "Meal · 4–8 yr",
+      "score": 80,
+      "sugar": 75,
+      "add": 82,
+      "pres": 78,
+      "fat": 85,
+      "sod": 70,
+      "base": 84,
+      "ingredients": [
+        "Millet flour",
+        "Whole wheat",
+        "Dehydrated vegetables",
+        "Rock salt"
+      ],
+      "flags": [
+        "Sodium: moderate"
+      ]
+    }
+  ],
+  "ageBands": [
+    {
+      "id": "0-6m",
+      "label": "0–6 mo",
+      "items": [
+        {
+          "n": "Exclusive breastfeeding",
+          "r": "All-India",
+          "d": "Recommended as the sole food source through the first six months, per national guidance."
+        }
+      ]
+    },
+    {
+      "id": "6-12m",
+      "label": "6–12 mo",
+      "items": [
+        {
+          "n": "Ragi porridge (finger millet)",
+          "r": "South & West India",
+          "d": "Thin, fermented or fresh millet porridge — often the first solid food introduced."
+        },
+        {
+          "n": "Dal ka paani (thin lentil water)",
+          "r": "North India",
+          "d": "Strained moong dal water, introduced as an early protein source."
+        }
+      ]
+    },
+    {
+      "id": "1-3y",
+      "label": "1–3 yr",
+      "items": [
+        {
+          "n": "Khichdi",
+          "r": "Pan-India",
+          "d": "Rice and lentil porridge, softened and mildly spiced — a near-universal toddler staple."
+        },
+        {
+          "n": "Dahi-chawal (curd rice)",
+          "r": "South India",
+          "d": "Mashed rice with curd, valued as cooling and easy to digest."
+        }
+      ]
+    },
+    {
+      "id": "4-8y",
+      "label": "4–8 yr",
+      "items": [
+        {
+          "n": "Paratha with sabzi",
+          "r": "North India",
+          "d": "Stuffed or plain flatbread paired with a mild vegetable side — common tiffin fare."
+        },
+        {
+          "n": "Idli-sambar",
+          "r": "South India",
+          "d": "Steamed rice cakes with lentil stew, a school-lunch staple."
+        },
+        {
+          "n": "Puffed rice mixtures (muri)",
+          "r": "East India",
+          "d": "Light, roasted puffed rice snacks, often with jaggery or a mild savoury mix."
+        }
+      ]
+    },
+    {
+      "id": "9-12y",
+      "label": "9–12 yr",
+      "items": [
+        {
+          "n": "Thali-style meals",
+          "r": "Pan-India",
+          "d": "Full plate meals introduced as portions scale up with growth needs."
+        },
+        {
+          "n": "Sattu drinks",
+          "r": "East & North India",
+          "d": "Roasted gram flour mixed with water or milk, valued for protein and energy."
+        }
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "wb",
+      "label": "West Bengal",
+      "items": [
+        {
+          "n": "Panta bhat",
+          "d": "Fermented overnight rice, traditionally served with a pinch of salt — an early digestive staple."
+        },
+        {
+          "n": "Muri-chola",
+          "d": "Puffed rice with roasted gram, a common light snack for children."
+        }
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "Karnataka",
+      "items": [
+        {
+          "n": "Ragi mudde",
+          "d": "Finger-millet dumplings, introduced to children once they can manage solid textures."
+        },
+        {
+          "n": "Akki rotti",
+          "d": "Rice-flour flatbread, often the first flatbread offered to toddlers."
+        }
+      ]
+    },
+    {
+      "id": "pb",
+      "label": "Punjab",
+      "items": [
+        {
+          "n": "Makki di roti with saag",
+          "d": "Cornflour flatbread with leafy greens, introduced gradually as texture tolerance grows."
+        },
+        {
+          "n": "Lassi",
+          "d": "Churned yoghurt drink, a common accompaniment to meals."
+        }
+      ]
+    },
+    {
+      "id": "mh",
+      "label": "Maharashtra",
+      "items": [
+        {
+          "n": "Varan bhat",
+          "d": "Simple dal and rice, a foundational toddler meal."
+        },
+        {
+          "n": "Sabudana khichdi",
+          "d": "Tapioca pearl preparation, often used as an easy-to-digest light meal."
+        }
+      ]
+    },
+    {
+      "id": "tn",
+      "label": "Tamil Nadu",
+      "items": [
+        {
+          "n": "Ragi kanji",
+          "d": "Thin finger-millet gruel, frequently an early weaning food."
+        },
+        {
+          "n": "Pongal",
+          "d": "Rice and moong dal cooked soft, mildly spiced for young children."
+        }
+      ]
+    }
+  ]
+}
