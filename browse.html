@@ -152,6 +152,18 @@
   .hfss-flag{ display:inline-block; margin-top:8px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.03em; text-transform:uppercase; background:var(--red-soft); color:var(--red); padding:3px 9px; border-radius:100px; animation:hfssPulse 2.4s ease-in-out infinite; }
   @keyframes hfssPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(166,64,42,0.25); } 50%{ box-shadow:0 0 0 5px rgba(166,64,42,0); } }
 
+  .buy-row{ margin-top:14px; padding-top:14px; border-top:1px solid var(--line); }
+  .buy-btn{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:var(--font-body); font-size:12.5px; font-weight:600;
+    padding:8px 14px; border-radius:100px;
+    background:var(--ink); color:var(--bg); text-decoration:none;
+    transition:transform .18s ease, box-shadow .18s ease, background .2s ease;
+  }
+  .buy-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 20px -10px rgba(34,26,18,0.4); background:var(--gold); color:#2b1c05; }
+  .buy-btn svg{ width:14px; height:14px; flex-shrink:0; }
+  .buy-disclosure{ font-family:var(--font-mono); font-size:9.5px; color:var(--ink-dim); margin-top:6px; display:block; }
+
   .metric-legend{ max-width:900px; margin:30px auto 0; padding:16px 20px; font-size:11.5px; color:var(--ink-dim); display:flex; flex-wrap:wrap; gap:16px; align-items:center; border-top:1px solid var(--line); }
   .metric-legend .lk{ display:flex; align-items:center; gap:6px; }
 
@@ -249,6 +261,21 @@
 </footer>
 
 <script>
+/* ---------------- Amazon Associates affiliate link ----------------
+   Replace AMAZON_TAG with your own approved Amazon Associates tracking ID
+   once you're accepted into the program (see README.md for the sign-up
+   and compliance steps). Using a search link rather than a direct ASIN
+   link is deliberate — it always resolves to a real listing even if a
+   specific product's exact ASIN changes or goes out of stock, and it
+   avoids linking to the wrong variant of a product we haven't verified.
+*/
+const AMAZON_TAG = 'kidposhan-21';
+
+function amazonSearchUrl(productName){
+  const query = encodeURIComponent(productName);
+  return `https://www.amazon.in/s?k=${query}&tag=${AMAZON_TAG}`;
+}
+
 /* ---------------- age reference thresholds (see age-metrics.html for citations) ---------------- */
 const ageRefs = {
   '1-3':  { sugarIdeal:13, sodium:1200, satFat:12,   fiber:19, protein:12.5 },
@@ -399,6 +426,14 @@ function render(age){
       <p class="note">${p.note}</p>
       ${hfssTriggered ? `<span class="hfss-flag">Would trip FSSAI's proposed HFSS warning</span>` : ``}
       ${p.est ? `<span class="est-flag">est. — one or more figures estimated, serving: ${p.serving}</span>` : `<span class="est-flag">serving: ${p.serving}</span>`}
+      ${(tier === 'excellent' || tier === 'good') ? `
+      <div class="buy-row">
+        <a class="buy-btn" href="${amazonSearchUrl(p.name)}" target="_blank" rel="noopener sponsored">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9.5" cy="19.5" r="1.5" fill="currentColor"/><circle cx="17.5" cy="19.5" r="1.5" fill="currentColor"/></svg>
+          View on Amazon
+        </a>
+        <span class="buy-disclosure">As an Amazon Associate, Poshan Score may earn from qualifying purchases.</span>
+      </div>` : ``}
     </div>
   `).join('');
 
