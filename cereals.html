@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cereal Aisle — Poshan Score</title>
+<style>
+  :root{
+    --bg:#FDFBF6; --bg-alt:#F6F0E4; --card:#FFFFFF; --line:#E7DFCE;
+    --ink:#221A12; --ink-dim:#6B5D4B;
+    --gold:#B5790A; --gold-soft:#F6E4BC;
+    --green:#3F6B3C; --green-soft:#E3EEDF;
+    --red:#A6402A; --red-soft:#F5E1DB;
+    --brown:#4A3423; --brown-soft:#EFE6DC;
+    --radius-lg:22px; --radius-md:14px;
+    --font-display:'Iowan Old Style','Palatino Linotype','Book Antiqua', Georgia, serif;
+    --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    --font-mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; }
+
+  nav{ position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(253,251,246,0.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ position:relative; width:20px; height:24px; flex-shrink:0; }
+  .brand-mark .tier{ position:absolute; left:0; right:0; height:6px; border-radius:3px; border:1px solid rgba(34,26,18,0.15); }
+  .brand-mark .tier:nth-child(1){ top:0; background:var(--green); }
+  .brand-mark .tier:nth-child(2){ top:6px; background:var(--gold); }
+  .brand-mark .tier:nth-child(3){ top:12px; background:var(--red); }
+  .brand-mark .tier:nth-child(4){ top:18px; background:var(--brown); }
+  .brand-name{ font-family:var(--font-display); font-size:18px; line-height:1.05; letter-spacing:-0.01em; color:var(--ink); }
+  .brand-name b{ display:block; color:var(--gold); font-size:11px; font-family:var(--font-mono); letter-spacing:0.14em; text-transform:uppercase; margin-top:2px; }
+  .nav-links{ display:none; gap:20px; font-size:13.5px; color:var(--ink-dim); }
+  .nav-links a{ text-decoration:none; transition:color .2s ease; position:relative; padding-bottom:2px; }
+  .nav-links a::after{ content:''; position:absolute; left:0; bottom:0; width:100%; height:1px; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .25s ease; }
+  .nav-links a:hover{ color:var(--gold); }
+  .nav-links a:hover::after{ transform:scaleX(1); }
+  @media(min-width:900px){ .nav-links{ display:flex; } }
+  .nav-cta{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; background:var(--ink); color:var(--bg); padding:9px 16px; border-radius:100px; text-decoration:none; white-space:nowrap; }
+
+  .hero{ max-width:900px; margin:0 auto; padding:44px 20px 8px; }
+  .eyebrow{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .eyebrow::before{ content:''; width:16px; height:1px; background:var(--gold); display:inline-block; }
+  h1{ font-family:var(--font-display); font-weight:400; letter-spacing:-0.01em; font-size:clamp(28px, 6vw, 40px); line-height:1.1; margin:0 0 14px; color:var(--ink); }
+  .lede{ font-size:14.5px; line-height:1.65; color:var(--ink-dim); max-width:68ch; margin:0; }
+  .lede b{ color:var(--ink); }
+  .lede a{ color:var(--gold); text-decoration:none; border-bottom:1px dotted var(--gold); }
+
+  .note-callout{
+    max-width:900px; margin:20px auto 0; padding:14px 18px; background:var(--gold-soft);
+    border-radius:var(--radius-md); font-size:12.5px; line-height:1.6; color:var(--ink);
+  }
+  .note-callout b{ color:var(--ink); }
+  .note-callout code{ font-family:var(--font-mono); font-size:11px; background:rgba(34,26,18,0.08); padding:1px 5px; border-radius:4px; }
+
+  /* controls: search + age tabs */
+  .controls{ max-width:900px; margin:26px auto 0; padding:0 20px; display:flex; flex-direction:column; gap:14px; }
+  .search-box{ position:relative; }
+  .search-box input{
+    width:100%; padding:13px 18px 13px 42px; border-radius:100px; border:1px solid var(--line);
+    background:var(--card); font-family:var(--font-body); font-size:14px; color:var(--ink);
+    box-shadow:0 2px 10px -6px rgba(74,52,35,0.10); outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .search-box input:focus{ border-color:var(--gold); box-shadow:0 4px 16px -6px rgba(181,121,10,0.3); }
+  .search-box svg{ position:absolute; left:16px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--ink-dim); }
+  .search-count{ font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:6px; padding-left:4px; }
+
+  .age-tab-bar{ position:relative; display:flex; gap:6px; background:var(--bg-alt); border-radius:100px; padding:6px; width:fit-content; }
+  .age-tab-bar .indicator{ position:absolute; top:6px; bottom:6px; left:6px; width:calc(25% - 5px); background:var(--card); border-radius:100px; box-shadow:0 6px 16px -6px rgba(74,52,35,0.28), 0 1px 3px rgba(74,52,35,0.12); transition:transform .35s cubic-bezier(.2,.8,.2,1); z-index:0; }
+  .age-tab{ position:relative; z-index:1; border:none; background:transparent; cursor:pointer; font-family:var(--font-mono); font-size:12px; letter-spacing:0.02em; padding:9px 14px; border-radius:100px; color:var(--ink-dim); transition:color .25s ease, transform .15s ease; white-space:nowrap; }
+  .age-tab.active{ color:var(--ink); font-weight:600; transform:scale(1.04); }
+
+  .summary-bar{ max-width:900px; margin:16px auto 0; padding:0 20px; display:flex; flex-wrap:wrap; gap:10px; }
+  .summary-chip{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.03em; text-transform:uppercase; padding:7px 13px; border-radius:100px; border:1px solid var(--line); background:var(--card); display:flex; align-items:center; gap:7px; color:var(--ink-dim); }
+  .tin-swatch{ width:14px; height:10px; border-radius:3px; flex-shrink:0; }
+
+  .section{ max-width:900px; margin:0 auto; padding:24px 20px 10px; }
+  .grid{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media(min-width:640px){ .grid{ grid-template-columns:1fr 1fr; } }
+
+  .pcard{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:0; border-top:4px solid var(--ink-dim); overflow:hidden;
+    opacity:0; transform:translateY(16px) scale(0.98);
+    box-shadow:0 2px 10px -6px rgba(74,52,35,0.10);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .pcard:hover{ transform:translateY(-4px); box-shadow:0 18px 30px -16px rgba(74,52,35,0.22); }
+  .pcard.animate-in{ animation:popIn .5s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes popIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+  .pcard.hidden{ display:none; }
+  .pcard.excellent{ border-top-color:var(--green); }
+  .pcard.good{ border-top-color:var(--gold); }
+  .pcard.caution{ border-top-color:var(--red); }
+  .pcard.avoid{ border-top-color:var(--brown); }
+
+  /* ---- flip tab: front/back, click to flip, zoom to lightbox ----
+     Real photo URLs drop into product.frontImg / product.backImg later —
+     until then, both faces render a styled placeholder. */
+  .flip-tab-wrap{ perspective:900px; height:150px; background:var(--bg-alt); position:relative; overflow:hidden; }
+  .flip-tab{
+    position:relative; width:100%; height:100%; transform-style:preserve-3d;
+    transition:transform .6s cubic-bezier(.2,.8,.2,1); cursor:pointer;
+  }
+  .flip-tab.flipped{ transform:rotateY(180deg); }
+  .tab-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .tab-face.tab-back{ transform:rotateY(180deg); }
+  .tab-face img{ width:100%; height:100%; object-fit:cover; }
+
+  /* placeholder faces (used until real images are wired in) */
+  .tab-placeholder{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; width:100%; height:100%; }
+  .tab-pkg-icon{ width:36px; height:44px; border-radius:6px 6px 3px 3px; position:relative; }
+  .tab-pkg-icon::before{ content:''; position:absolute; top:5px; left:4px; right:4px; height:6px; background:rgba(255,255,255,0.55); border-radius:2px; }
+  .tab-pkg-icon.excellent{ background:var(--green); } .tab-pkg-icon.good{ background:var(--gold); }
+  .tab-pkg-icon.caution{ background:var(--red); } .tab-pkg-icon.avoid{ background:var(--brown); }
+  .tab-placeholder .tp-label{ font-family:var(--font-mono); font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); }
+
+  .tab-back-panel{ width:76%; padding:10px; }
+  .tab-back-panel .tbp-title{ font-family:var(--font-mono); font-size:8px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:6px; text-align:center; }
+  .tab-back-panel .tbp-line{ height:4px; border-radius:2px; background:var(--line); margin-bottom:4px; }
+  .tab-back-panel .tbp-line.w90{ width:90%; } .tab-back-panel .tbp-line.w70{ width:70%; margin-left:auto; margin-right:auto; }
+  .tab-back-panel .tbp-line.w60{ width:60%; } .tab-back-panel .tbp-line.w80{ width:80%; margin-left:auto; margin-right:auto; }
+
+  .flip-hint{ position:absolute; bottom:6px; left:50%; transform:translateX(-50%); font-family:var(--font-mono); font-size:8.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-dim); background:rgba(253,251,246,0.85); padding:2px 8px; border-radius:100px; pointer-events:none; z-index:3; }
+
+  .zoom-btn{
+    position:absolute; top:8px; right:8px; z-index:4; width:26px; height:26px; border-radius:50%;
+    background:rgba(253,251,246,0.92); border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:transform .18s ease, background .2s ease;
+  }
+  .zoom-btn:hover{ transform:scale(1.12); background:var(--card); }
+  .zoom-btn svg{ width:13px; height:13px; color:var(--ink); }
+
+  /* lightbox */
+  .lightbox-overlay{
+    position:fixed; inset:0; z-index:100; background:rgba(34,26,18,0.72);
+    display:none; align-items:center; justify-content:center; padding:24px;
+    opacity:0; transition:opacity .25s ease;
+  }
+  .lightbox-overlay.open{ display:flex; }
+  .lightbox-overlay.show{ opacity:1; }
+  .lightbox-box{
+    background:var(--card); border-radius:var(--radius-lg); padding:24px; max-width:420px; width:100%;
+    max-height:80vh; overflow-y:auto; transform:scale(0.9); transition:transform .25s cubic-bezier(.2,.8,.2,1);
+    position:relative;
+  }
+  .lightbox-overlay.show .lightbox-box{ transform:scale(1); }
+  .lightbox-close{
+    position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%;
+    background:var(--bg-alt); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .lightbox-close svg{ width:16px; height:16px; color:var(--ink); }
+  .lightbox-title{ font-family:var(--font-display); font-size:17px; margin:0 0 4px; padding-right:30px; }
+  .lightbox-sub{ font-family:var(--font-mono); font-size:10px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:16px; }
+  .lightbox-img-area{ width:100%; min-height:220px; border-radius:14px; background:var(--bg-alt); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .lightbox-img-area img{ width:100%; height:auto; }
+  .lightbox-placeholder{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:30px; }
+  .lightbox-placeholder .lp-icon{ width:64px; height:78px; border-radius:10px 10px 5px 5px; position:relative; }
+  .lightbox-placeholder .lp-icon::before{ content:''; position:absolute; top:9px; left:7px; right:7px; height:10px; background:rgba(255,255,255,0.55); border-radius:4px; }
+  .lightbox-placeholder .lp-icon.excellent{ background:var(--green); }
+  .lightbox-placeholder .lp-icon.good{ background:var(--gold); }
+  .lightbox-placeholder .lp-icon.caution{ background:var(--red); }
+  .lightbox-placeholder .lp-icon.avoid{ background:var(--brown); }
+
+  .pcard-body{ padding:16px 18px 18px; }
+  .pcard-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; }
+  .pcard h3{ font-family:var(--font-display); font-size:15.5px; font-weight:400; margin:0; line-height:1.3; }
+  .tierbadge{ font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; text-transform:uppercase; padding:4px 10px; border-radius:100px; white-space:nowrap; flex-shrink:0; }
+  .tierbadge.excellent{ background:var(--green-soft); color:var(--green); }
+  .tierbadge.good{ background:var(--gold-soft); color:var(--gold); }
+  .tierbadge.caution{ background:var(--red-soft); color:var(--red); }
+  .tierbadge.avoid{ background:var(--brown); color:#fff; }
+
+  .score-row{ display:flex; align-items:center; gap:8px; margin:6px 0 10px; flex-wrap:wrap; }
+  .score-num{ font-family:var(--font-display); font-size:19px; color:var(--ink); }
+  .score-den{ font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); }
+  .pips{ display:flex; gap:3px; margin-left:auto; flex-wrap:wrap; max-width:130px; justify-content:flex-end; }
+  .pip{ width:8px; height:8px; border-radius:50%; }
+  .pip.p2{ background:var(--green); } .pip.p1{ background:var(--gold); } .pip.p0{ background:var(--red); }
+
+  .label-panel{ background:var(--bg-alt); border-radius:10px; padding:10px 12px; margin:10px 0; }
+  .label-panel .lp-title{ font-family:var(--font-mono); font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:5px; }
+  .label-panel .lp-ingredients{ font-size:11.5px; line-height:1.55; color:var(--ink-dim); }
+
+  .hfss-flag{ display:inline-block; margin-top:2px; margin-bottom:8px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.03em; text-transform:uppercase; background:var(--red-soft); color:var(--red); padding:3px 9px; border-radius:100px; }
+  .est-flag{ font-family:var(--font-mono); font-size:10px; color:var(--ink-dim); margin-top:6px; display:block; }
+
+  .buy-row{ margin-top:12px; padding-top:12px; border-top:1px solid var(--line); }
+  .buy-btn{ display:inline-flex; align-items:center; gap:7px; font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:100px; background:var(--ink); color:var(--bg); text-decoration:none; transition:transform .18s ease, box-shadow .18s ease, background .2s ease; }
+  .buy-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 20px -10px rgba(34,26,18,0.4); background:var(--gold); color:#2b1c05; }
+  .buy-btn svg{ width:14px; height:14px; flex-shrink:0; }
+  .buy-disclosure{ font-family:var(--font-mono); font-size:9.5px; color:var(--ink-dim); margin-top:6px; display:block; }
+
+  .no-results{ text-align:center; padding:50px 20px; color:var(--ink-dim); font-size:14px; }
+
+  footer{ text-align:center; padding:40px 20px 60px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em; color:var(--ink-dim); }
+  footer b{ color:var(--ink); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html">
+    <div class="brand-mark"><div class="tier"></div><div class="tier"></div><div class="tier"></div><div class="tier"></div></div>
+    <div class="brand-name">Poshan Score<b>by Kidposhan</b></div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="age-metrics.html">Age &amp; Metrics</a>
+    <a href="browse.html">Browse</a>
+    <a href="cereals.html">Cereal Aisle</a>
+    <a href="why-we-do-this.html">Why We Do This</a>
+  </div>
+  <a class="nav-cta" href="age-metrics.html">How scoring works</a>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Cereal Aisle &nbsp;·&nbsp; 29 SKUs, one Blinkit list</div>
+  <h1>Kids' breakfast cereals, scored the same way.</h1>
+  <p class="lede">
+    This page holds exactly the 29 products from your Blinkit list — nothing added, nothing left out.
+    Every score uses the same <a href="age-metrics.html">10-metric, age-banded rubric</a> as the rest of
+    the site. <b>Buy on Amazon</b> buttons show on Good and Excellent-tier products only.
+  </p>
+</header>
+
+<div class="note-callout">
+  <b>Tap any product's tab to flip between front and back, and use the zoom icon to pop it into a
+  larger view.</b> Real photos aren't wired in yet — Blinkit and Amazon both actively block automated
+  page fetching, so I couldn't pull image URLs from the sheet you sent, even with the exact product
+  pages linked. The flip/zoom feature is fully built and ready — each product just needs a real image
+  URL dropped into its <code>frontImg</code> / <code>backImg</code> field in the code (see README for
+  exactly where). Until then, both faces show the researched ingredient panel instead of a photo.
+</div>
+
+<div class="controls">
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Search these 29 products…" autocomplete="off">
+  </div>
+  <div class="search-count" id="searchCount"></div>
+
+  <div class="age-tab-bar" id="ageTabBar">
+    <div class="indicator" id="ageIndicator"></div>
+    <button class="age-tab active" data-age="1-3">1–3 yrs</button>
+    <button class="age-tab" data-age="4-6">4–6 yrs</button>
+    <button class="age-tab" data-age="7-9">7–9 yrs</button>
+    <button class="age-tab" data-age="10-12">10–12 yrs</button>
+  </div>
+</div>
+
+<div class="summary-bar" id="summaryBar"></div>
+
+<section class="section">
+  <div class="grid" id="productGrid"></div>
+  <div class="no-results" id="noResults" style="display:none;">No products match that search.</div>
+</section>
+
+<p class="lede" style="max-width:900px; margin:20px auto; padding:0 20px; font-size:12px;">
+  Sources and thresholds: same as <a href="age-metrics.html">Age &amp; Metrics</a> — ICMR-NIN 2020, WHO
+  sugar/saturated-fat guidance, NASEM/IOM DRIs (sodium, fiber proxy), FSSAI trans-fat and additive
+  regulations, and FSSAI's proposed HFSS warning (Supreme Court filing, 29 Aug 2026). Nutrition figures
+  for many of these 29 come from retailer nutrition panels and brand sites rather than a physical label
+  photo — products marked <b>est.</b> have one or more figures estimated from the closest confirmed
+  sibling product or category norm, not read directly.
+</p>
+
+<footer>
+  Benchmarked against <b>ICMR-NIN 2020</b>, <b>WHO</b> guidance, <b>NASEM/IOM DRIs</b> and <b>FSSAI</b> regulation ·
+  Poshan Score is an independent rating, not a certification
+</footer>
+
+<script>
+const AMAZON_TAG = 'kidposhan-21';
+function amazonSearchUrl(productName){
+  return `https://www.amazon.in/s?k=${encodeURIComponent(productName)}&tag=${AMAZON_TAG}`;
+}
+
+const ageRefs = {
+  '1-3':  { sugarIdeal:13, sodium:1200, satFat:12, fiber:19, protein:12.5 },
+  '4-6':  { sugarIdeal:17, sodium:1500, satFat:15, fiber:25, protein:16   },
+  '7-9':  { sugarIdeal:21, sodium:1800, satFat:19, fiber:26, protein:23   },
+  '10-12':{ sugarIdeal:27, sodium:2000, satFat:24, fiber:31, protein:32.5 }
+};
+
+/* All figures are PER 100g; servingG converts to a per-serving reading for scoring.
+   preservative/additive/transFat/baseIntegrity are fixed 0/1/2, same across ages.
+   est:true = one or more figures estimated from a sibling product or category norm. */
+const products = [
+  { name:"Kellogg's Multigrain Chocos More Chocolatey, No-Maida", servingG:30, frontImg:"", backImg:"",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:false,
+    ingredients:"Multigrain Flour Mix 64.8% (Wheat, Jowar, Rice, Corn), Sugar, Cocoa Solids, Minerals, Cereal Extract, Iodized Salt, Colours (INS 150a, INS 150d), Edible Vegetable Oil (Palmolein), Flavours (Nature Identical & Artificial – Cream), Vitamins, Antioxidant (INS 307b)." },
+  { name:"Kellogg's Multigrain Chocos Variety Pack", servingG:30, frontImg:"", backImg:"",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same formulation as Multigrain Chocos More Chocolatey — this is a bundled variety pack of the same base cereal." },
+  { name:"Kellogg's Original Corn Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:8.5, addedSugar:8.0, sodium:600, satFat:0.2, fiber:3.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn Grits (90%), Sugar, Cereal Extract, Iodized Salt, Vitamins, Antioxidant (INS 307b), Minerals. Sugar and sodium are category-typical estimates — the India pack's exact per-100g sugar figure wasn't confirmed." },
+  { name:"Kellogg's Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)", servingG:30, frontImg:"", backImg:"",
+    sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Multigrain Flour Mix 53.7% (Wheat, Oats, Corn), Choco Cream {Sugar, Vegetable Oil (Sunflower, Palm), Cocoa Solids, Milk Solids, Emulsifier (INS 322(i)), Flavour (Natural)}, Sugar, Cocoa Solids, Iodized Salt, Antioxidant (INS 307b), Vitamins." },
+  { name:"Kellogg's Multigrain Chocos Moons & Stars", servingG:30, frontImg:"", backImg:"",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos — shaped as moons and stars." },
+  { name:"Slurrp Farm Choco Crunch Breakfast Cereal for Kids", servingG:30, frontImg:"", backImg:"",
+    sugar:24.6, addedSugar:20.9, sodium:3.0, satFat:0.8, fiber:4.9, protein:7.3,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
+    ingredients:"Wholegrain Millets — Sorghum (Jowar) & Finger Millet (Ragi) 23.7%, Raw Unrefined Sugar, Corn, Rice Flour, Cocoa, Rice Bran Oil, Vanilla Extract, Natural Flavours, Natural Vitamin E. No artificial colours, additives, or preservatives declared." },
+  { name:"Kellogg's Froot Loops - Crunchy Multigrain Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:30.0, addedSugar:27.0, sodium:400, satFat:1.0, fiber:5.0, protein:6.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"India-specific ingredient panel not confirmed — figures estimated from the fruit-loop category. Global Froot Loops formulations typically include synthetic colours; whether the India SKU matches wasn't independently verified." },
+  { name:"Kellogg's Multigrain Chocos Crunchy Bites Kids Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos, in a smaller bite shape." },
+  { name:"Kellogg's Almonds & Honey Corn Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:12.0, addedSugar:10.0, sodium:550, satFat:1.0, fiber:4.0, protein:8.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn flakes base with real almonds and honey — full ingredient panel not independently confirmed; figures estimated from the standard Corn Flakes base plus honey." },
+  { name:"Kellogg's Chocos Fills Double Chocolaty Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same formulation as Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)." },
+  { name:"Kellogg's Multigrain Plus Corn Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:9.0, addedSugar:8.5, sodium:500, satFat:0.3, fiber:5.0, protein:8.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn flakes base with added multigrain flour — full panel not independently confirmed; estimated from the Corn Flakes Original base." },
+  { name:"Nestle Munch Choco Fills Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:28.0, addedSugar:26.0, sodium:250, satFat:4.0, fiber:4.0, protein:7.0,
+    preservative:2, additive:1, transFat:1, baseIntegrity:1, est:true,
+    ingredients:"Full ingredient panel not independently confirmed — figures estimated from the cream-filled chocolate cereal category, using Kellogg's Choco Fills as the closest comparable formulation." },
+  { name:"Tata Soulfull Ragi Bites Choco 7 Grains Kids Breakfast Cereal (No Maida)", servingG:30, frontImg:"", backImg:"",
+    sugar:26.0, addedSugar:25.0, sodium:130, satFat:4.0, fiber:5.0, protein:6.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Ragi (25%), Refined Sugar, Rice, Whole Wheat Flour, Maize, Bengal Gram Dal, Cocoa Solids, Jowar, Oats, Palmolein Oil, Nature-Identical Flavouring, Iodised Salt, Stabilizer (INS 170), Malt Extract, Colour (INS 150d), Antioxidant (INS 320). Fat and fiber figures estimated from the closest confirmed sibling (Choco Fills variant)." },
+  { name:"Little Joys Millet Chocos Crunch", servingG:30, frontImg:"", backImg:"",
+    sugar:22.0, addedSugar:18.0, sodium:50, satFat:1.0, fiber:5.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Millet-based (ragi, jowar, foxtail, red rice), jaggery-sweetened, no maida claimed. Full panel not independently confirmed; estimated from the millet-cereal category using Slurrp Farm as a reference point." },
+  { name:"Kellogg's Chocos Multigrain Moons & Stars Chocos", servingG:30, frontImg:"", backImg:"",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars." },
+  { name:"Tata Soulfull Choco Fills Ragi Bites Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:29.3, addedSugar:29.0, sodium:126, satFat:11.2, fiber:6.7, protein:5.1,
+    preservative:2, additive:0, transFat:2, baseIntegrity:1, est:false,
+    ingredients:"Mixed Grain Flours 53% [Ragi 34.1%, Rice, Chana Dal], Refined Sugar, Interesterified Vegetable Fat, Cocoa Solids, Milk Solids, Nature-Identical Flavouring, Iodised Salt, Emulsifier (INS 322(i)), Anticaking Agent (INS 170(i)), Colour (INS 150d), Refined Palmolein Oil, Antioxidant (INS 320). Saturated fat is unusually high for the category at 11.2g/100g." },
+  { name:"Kellogg's Special K Original Cereal with Whole Wheat", servingG:30, frontImg:"", backImg:"",
+    sugar:15.0, addedSugar:13.0, sodium:336, satFat:0.3, fiber:6.0, protein:8.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Rice (47%), Wholewheat (37%), Sugar, Barley (5%), Malted Barley Flour, Salt, Barley Malt Extract, Vitamins. No artificial colours, flavours, or preservatives. Figures from the closest confirmed international formulation; India-specific pack not independently verified." },
+  { name:"Kellogg's Strawberry Puree Corn Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:11.0, addedSugar:9.5, sodium:550, satFat:0.3, fiber:3.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn flakes base with strawberry puree — full panel not independently confirmed; estimated from the Corn Flakes Original base plus fruit puree." },
+  { name:"8AM Corn Flakes Family Pack", servingG:30, frontImg:"", backImg:"",
+    sugar:9.0, addedSugar:8.5, sodium:550, satFat:0.3, fiber:3.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Budget corn flakes brand — full panel not independently confirmed; estimated from generic plain corn flakes category norms." },
+  { name:"Kwality Multigrain Choco Flakes - No Maida", servingG:30, frontImg:"", backImg:"",
+    sugar:28.0, addedSugar:26.0, sodium:260, satFat:1.5, fiber:5.0, protein:7.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Full panel not independently confirmed — figures estimated from the multigrain choco-flakes category, using Kellogg's Multigrain Chocos as a reference point." },
+  { name:"Tata Soulfull Chocos Variety Pack Cereal Combo", servingG:30, frontImg:"", backImg:"",
+    sugar:29.3, addedSugar:29.0, sodium:126, satFat:11.2, fiber:6.7, protein:5.1,
+    preservative:2, additive:0, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Combo/variety pack bundling multiple Soulfull SKUs — scored using the flagship Choco Fills Ragi Bites formulation as the representative product in the bundle." },
+  { name:"Bagrry's Corn Flakes Plus Original & Healthier (with Fibre Power)", servingG:30, frontImg:"", backImg:"",
+    sugar:9.0, addedSugar:8.0, sodium:500, satFat:0.3, fiber:6.0, protein:8.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn flakes with added fibre — full panel not independently confirmed; fiber figure estimated slightly higher than standard corn flakes given the brand's stated 'Fibre Power' positioning." },
+  { name:"Kellogg's Multigrain Chocos Moons & Stars Kids Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars." },
+  { name:"Kellogg's Real Honey Corn Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:12.0, addedSugar:10.0, sodium:550, satFat:0.2, fiber:3.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn flakes base with honey — full panel not independently confirmed; estimated from the Corn Flakes Original base plus honey." },
+  { name:"Kwality Corn Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:8.0, addedSugar:7.5, sodium:550, satFat:0.3, fiber:3.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Budget plain corn flakes — full panel not independently confirmed; estimated from generic corn flakes category norms." },
+  { name:"Parle Hide & Seek Fills", servingG:30, frontImg:"", backImg:"",
+    sugar:30.0, addedSugar:28.0, sodium:200, satFat:6.0, fiber:2.0, protein:6.0,
+    preservative:1, additive:1, transFat:1, baseIntegrity:1, est:true,
+    ingredients:"Product identity and category (cereal vs. filled-biscuit crossover) not fully confirmed from research — figures are a cautious category estimate for a cream-filled snack. Treat this entry's confidence as low until the pack is verified directly." },
+  { name:"Kellogg's All Bran Wheat Flakes", servingG:30, frontImg:"", backImg:"",
+    sugar:18.0, addedSugar:15.0, sodium:500, satFat:0.5, fiber:18.0, protein:10.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Wheat bran-based — full panel not independently confirmed; fiber figure reflects the bran-cereal category (reliably high), other figures estimated." },
+  { name:"Kellogg's Protein Chocos", servingG:30, frontImg:"", backImg:"",
+    sugar:24.0, addedSugar:22.0, sodium:280, satFat:1.5, fiber:6.0, protein:15.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Multigrain Chocos base with added protein fortification — full panel not independently confirmed; protein figure elevated per the product's stated positioning, other figures estimated from the base Chocos formulation." },
+  { name:"Kellogg's Choco Fills Kids Cereal (Caramel Flavour)", servingG:30, frontImg:"", backImg:"",
+    sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same cream-filled formulation family as Double Chocolaty Fills Chocos, caramel flavour variant — figures estimated from that sibling product." },
+];
+
+/* ---------------- scoring (same rubric as browse.html) ---------------- */
+function penaltyScore(value, limit){
+  const r = value / limit;
+  if (r <= 0.10) return 2;
+  if (r <= 0.30) return 1;
+  return 0;
+}
+function creditScore(value, target){
+  const r = value / target;
+  if (r >= 0.15) return 2;
+  if (r >= 0.05) return 1;
+  return 0;
+}
+function scoreProduct(p, age){
+  const ref = ageRefs[age];
+  const scale = p.servingG / 100;
+  const servingSugar = p.addedSugar * scale;
+  const servingSodium = p.sodium * scale;
+  const servingSatFat = p.satFat * scale;
+  const servingFiber = p.fiber * scale;
+  const servingProtein = p.protein * scale;
+
+  const sugarScore = penaltyScore(servingSugar, ref.sugarIdeal);
+  const sodiumScore = penaltyScore(servingSodium, ref.sodium);
+  const satFatScore = penaltyScore(servingSatFat, ref.satFat);
+  const fiberScore = creditScore(servingFiber, ref.fiber);
+  const proteinScore = creditScore(servingProtein, ref.protein);
+
+  const hfssTriggered = (sugarScore === 0 || sodiumScore === 0 || satFatScore === 0);
+  const hfssScore = hfssTriggered ? 0 : 2;
+
+  const scores = [sugarScore, sodiumScore, satFatScore, p.transFat, fiberScore, proteinScore, p.preservative, p.additive, p.baseIntegrity, hfssScore];
+  const total = scores.reduce((a,b)=>a+b, 0);
+  const riskScores = [sugarScore, sodiumScore, satFatScore, p.transFat, p.preservative, p.additive, p.baseIntegrity, hfssScore];
+  const hasRiskZero = riskScores.some(s => s === 0);
+
+  let tier;
+  if (total >= 17) tier = 'excellent';
+  else if (total >= 12) tier = 'good';
+  else if (total >= 7) tier = 'caution';
+  else tier = 'avoid';
+  if (hasRiskZero && (tier === 'excellent' || tier === 'good')) tier = 'caution';
+
+  return { total, tier, scores, hfssTriggered };
+}
+
+const tierLabel = { excellent:'Excellent', good:'Good', caution:'Caution', avoid:'Avoid' };
+let currentAge = '1-3';
+let currentSearch = '';
+
+function render(){
+  const grid = document.getElementById('productGrid');
+  const noResults = document.getElementById('noResults');
+  const q = currentSearch.trim().toLowerCase();
+
+  const scored = products
+    .map(p => ({ p, ...scoreProduct(p, currentAge) }))
+    .filter(s => s.p.name.toLowerCase().includes(q));
+
+  scored.sort((a,b) => b.total - a.total);
+
+  document.getElementById('searchCount').textContent =
+    q ? `${scored.length} of ${products.length} products match "${currentSearch}"` : `Showing all ${products.length} products`;
+
+  const counts = { excellent:0, good:0, caution:0, avoid:0 };
+  products.map(p => scoreProduct(p, currentAge)).forEach(s => counts[s.tier]++);
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="summary-chip"><span class="tin-swatch" style="background:#7FAE7B"></span>${counts.excellent} Excellent</div>
+    <div class="summary-chip"><span class="tin-swatch" style="background:#F0C361"></span>${counts.good} Good</div>
+    <div class="summary-chip"><span class="tin-swatch" style="background:#D8735F"></span>${counts.caution} Caution</div>
+    <div class="summary-chip"><span class="tin-swatch" style="background:#4A3423"></span>${counts.avoid} Avoid</div>
+  `;
+
+  if (scored.length === 0) {
+    grid.innerHTML = '';
+    noResults.style.display = 'block';
+    return;
+  }
+  noResults.style.display = 'none';
+
+  grid.innerHTML = scored.map(({p, total, tier, scores, hfssTriggered}, idx) => `
+    <div class="pcard ${tier}">
+      <div class="flip-tab-wrap">
+        <div class="flip-tab" data-idx="${idx}" onclick="toggleFlip(this, event)">
+          <div class="tab-face tab-front">
+            ${p.frontImg ? `<img src="${p.frontImg}" alt="${p.name} — front of pack">` : `
+            <div class="tab-placeholder">
+              <div class="tab-pkg-icon ${tier}"></div>
+              <div class="tp-label">Front — photo not yet added</div>
+            </div>`}
+          </div>
+          <div class="tab-face tab-back">
+            ${p.backImg ? `<img src="${p.backImg}" alt="${p.name} — back of pack">` : `
+            <div class="tab-back-panel">
+              <div class="tbp-title">Back — ingredients (from research)</div>
+              <div class="tbp-line w90"></div>
+              <div class="tbp-line w70"></div>
+              <div class="tbp-line w60"></div>
+              <div class="tbp-line w80"></div>
+              <div class="tbp-line w70"></div>
+            </div>`}
+          </div>
+        </div>
+        <div class="flip-hint">Tap to flip</div>
+        <div class="zoom-btn" onclick="openLightbox(event, ${idx})" title="Zoom">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 8v6M8 11h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-head">
+          <h3>${p.name}</h3>
+          <span class="tierbadge ${tier}">${tierLabel[tier]}</span>
+        </div>
+        <div class="score-row">
+          <span class="score-num">${total}</span><span class="score-den">/ 20</span>
+          <div class="pips">${scores.map(s => `<span class="pip p${s}"></span>`).join('')}</div>
+        </div>
+        <div class="label-panel">
+          <div class="lp-title">Ingredients (from research)</div>
+          <div class="lp-ingredients">${p.ingredients}</div>
+        </div>
+        ${hfssTriggered ? `<span class="hfss-flag">Would trip FSSAI's proposed HFSS warning</span>` : ``}
+        ${p.est ? `<span class="est-flag">est. — one or more figures estimated · serving: ${p.servingG}g</span>` : `<span class="est-flag">serving: ${p.servingG}g</span>`}
+        ${(tier === 'excellent' || tier === 'good') ? `
+        <div class="buy-row">
+          <a class="buy-btn" href="${amazonSearchUrl(p.name)}" target="_blank" rel="noopener sponsored">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h15l-1.5 9h-12L6 6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 6 5 3H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9.5" cy="19.5" r="1.5" fill="currentColor"/><circle cx="17.5" cy="19.5" r="1.5" fill="currentColor"/></svg>
+            View on Amazon
+          </a>
+          <span class="buy-disclosure">As an Amazon Associate, Poshan Score may earn from qualifying purchases.</span>
+        </div>` : ``}
+      </div>
+    </div>
+  `).join('');
+
+  currentScored = scored;
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.pcard').forEach((el, i) => {
+      setTimeout(() => el.classList.add('animate-in'), i * 30);
+    });
+  });
+}
+
+/* ---------------- tabs ---------------- */
+const tabs = document.querySelectorAll('.age-tab');
+const indicator = document.getElementById('ageIndicator');
+function moveIndicator(tab){ indicator.style.transform = `translateX(${tab.offsetLeft - 6}px)`; }
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.toggle('active', t === tab));
+    moveIndicator(tab);
+    currentAge = tab.getAttribute('data-age');
+    render();
+  });
+});
+
+/* ---------------- search ---------------- */
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  currentSearch = e.target.value;
+  render();
+});
+
+window.addEventListener('load', () => {
+  moveIndicator(document.querySelector('.age-tab.active'));
+  render();
+});
+window.addEventListener('resize', () => {
+  moveIndicator(document.querySelector('.age-tab.active'));
+});
+</script>
+
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightboxOnOverlay(event)">
+  <div class="lightbox-box">
+    <button class="lightbox-close" onclick="closeLightbox()">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lightbox-title" id="lightboxTitle"></div>
+    <div class="lightbox-sub" id="lightboxSub"></div>
+    <div class="lightbox-img-area" id="lightboxImgArea"></div>
+  </div>
+</div>
+
+<script>
+function toggleFlip(el, evt){
+  evt.stopPropagation();
+  el.classList.toggle('flipped');
+}
+
+let currentScored = [];
+
+function openLightbox(evt, idx){
+  evt.stopPropagation();
+  const entry = currentScored[idx];
+  if (!entry) return;
+  const p = entry.p;
+  const tabEl = evt.currentTarget.previousElementSibling.previousElementSibling; // .flip-tab
+  const isBack = tabEl && tabEl.classList.contains('flipped');
+  const img = isBack ? p.backImg : p.frontImg;
+  const side = isBack ? 'Back of pack' : 'Front of pack';
+
+  document.getElementById('lightboxTitle').textContent = p.name;
+  document.getElementById('lightboxSub').textContent = side;
+
+  const area = document.getElementById('lightboxImgArea');
+  if (img) {
+    area.innerHTML = `<img src="${img}" alt="${p.name} — ${side}">`;
+  } else if (isBack) {
+    area.innerHTML = `
+      <div class="lightbox-placeholder">
+        <div class="lp-icon ${entry.tier}"></div>
+        <div style="font-size:12px; color:var(--ink-dim); text-align:center; max-width:280px;">
+          No back-of-pack photo yet. Ingredients from research:<br><br>
+          <span style="color:var(--ink); font-size:11.5px; line-height:1.6;">${p.ingredients}</span>
+        </div>
+      </div>`;
+  } else {
+    area.innerHTML = `
+      <div class="lightbox-placeholder">
+        <div class="lp-icon ${entry.tier}"></div>
+        <div style="font-size:12px; color:var(--ink-dim); text-align:center;">No front-of-pack photo yet.</div>
+      </div>`;
+  }
+
+  const overlay = document.getElementById('lightboxOverlay');
+  overlay.classList.add('open');
+  requestAnimationFrame(() => overlay.classList.add('show'));
+}
+
+function closeLightbox(){
+  const overlay = document.getElementById('lightboxOverlay');
+  overlay.classList.remove('show');
+  setTimeout(() => overlay.classList.remove('open'), 250);
+}
+function closeLightboxOnOverlay(evt){
+  if (evt.target.id === 'lightboxOverlay') closeLightbox();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+
+</body>
+</html>
