@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Save Images Helper — Poshan Score</title>
+<style>
+  body{ font-family:-apple-system,sans-serif; background:#FDFBF6; color:#221A12; margin:0; padding:20px; }
+  h1{ font-size:22px; }
+  .instructions{ background:#F6E4BC; border-radius:12px; padding:16px 20px; margin-bottom:24px; font-size:14px; line-height:1.6; }
+  .instructions code{ background:rgba(0,0,0,0.08); padding:2px 6px; border-radius:4px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:20px; }
+  .item{ background:#fff; border:1px solid #E7DFCE; border-radius:12px; padding:14px; }
+  .item img{ width:100%; height:160px; object-fit:contain; background:#F6F0E4; border-radius:8px; margin-bottom:10px; }
+  .item .filename{ font-family:ui-monospace,monospace; font-size:11px; background:#F6F0E4; padding:4px 8px; border-radius:6px; word-break:break-all; margin-bottom:6px; }
+  .item .filename b{ color:#A6402A; }
+  .item .label{ font-size:12px; color:#6B5D4B; margin-bottom:6px; }
+  .broken{ font-size:11px; color:#A6402A; }
+</style>
+</head>
+<body>
+
+<h1>Save these 19 images to your images/ folder</h1>
+<div class="instructions">
+  For each image below: <b>right-click it → "Save image as"</b> → save it into the <code>images</code>
+  folder next to your HTML files, using <b>exactly</b> the filename shown underneath it (the part in bold
+  red is the part that has to match exactly — the rest is just for your reference).
+  <br><br>
+  If an image below shows as broken/won't load, skip it — that means the browser blocked it here too and
+  you'll need to visit the original product page directly to save it instead (links included below).
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const images = [
+  { file: "multigrain-chocos-more-chocolatey-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501750/prod_img-939867_en_in_8901499010728_2608201107_p_1.png", page: "https://www.kelloggs.com/en-in/products/chocos/chocos-whole-grain-cereal.html" },
+  { file: "multigrain-chocos-more-chocolatey-back.jpg", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501750/nutlabel-2720449_en_in_08901499010728_2509151235_n_1.jpg", page: "https://www.kelloggs.com/en-in/products/chocos/chocos-whole-grain-cereal.html" },
+  { file: "corn-flakes-original-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501740/prod_img-940037_en_in_08901499008893_2606111119_p_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-original-and-the-best-cereal.html" },
+  { file: "corn-flakes-original-back.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501740/nutlabel-2720454_en_in_08901499008893_2605141006_n_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-original-and-the-best-cereal.html" },
+  { file: "slurrp-farm-choco-crunch-front.jpg", src: "https://slurrpfarm.com/cdn/shop/files/1_Chocolate-Crunch_D2C_1500x1500_aec18ce4-038c-48b4-9b3d-08dc4895cb18.jpg", page: "https://slurrpfarm.com/products/millet-crunch-cereal-chocolate-stars-and-moons-healthy-millet-breakfast-300-gm" },
+  { file: "slurrp-farm-choco-crunch-back.jpg", src: "https://slurrpfarm.com/cdn/shop/files/2_Chocolate-Crunch_D2C_1500x1500_55b6934b-3ba3-472b-9be5-f0425d2d27f3.jpg", page: "https://slurrpfarm.com/products/millet-crunch-cereal-chocolate-stars-and-moons-healthy-millet-breakfast-300-gm" },
+  { file: "almonds-honey-corn-flakes-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501741/prod_img-5547048_en_in_08901499008343_2606111122_p_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-real-almond-and-honey.html" },
+  { file: "almonds-honey-corn-flakes-back.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501741/nutlabel-2720451_en_in_08901499008343_2605141434_n_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-real-almond-and-honey.html" },
+  { file: "bagrrys-corn-flakes-plus-front.jpg", src: "https://bagrrys.com/cdn/shop/files/1_9_7033f41b-7f0e-49e9-9a76-51fff045763c.jpg", page: "https://bagrrys.com/products/cornflakes-original-and-healthier" },
+  { file: "multigrain-chocos-moons-stars-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501757/prod_img-940016_en_in_8901499010773_2608201110_p_1.png", page: "https://www.kelloggs.com/en-in/products/chocos/chocos-moons-and-stars.html" },
+  { file: "multigrain-chocos-crunchy-bites-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501755/prod_img-939964_en_in_8901499010742_2608201114_p_1.png", page: "https://www.kelloggs.com/en-in/products/chocos/chocos-crunchy-bites.html" },
+  { file: "froot-loops-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_842566/prod_img-940332_in_08901499011176_2202030852_p_1.png", page: "https://www.kelloggs.com/en-in/products/froot-loops/kelloggs-froot-loops.html" },
+  { file: "froot-loops-back.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_842566/nutlabel-842937_in_8901499011176_n_1.png", page: "https://www.kelloggs.com/en-in/products/froot-loops/kelloggs-froot-loops.html" },
+  { file: "multigrain-plus-corn-flakes-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_7156697/prod_img-7157958_en_in_08901499027511_2602211000_p_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-plus-multigrain.html" },
+  { file: "multigrain-plus-corn-flakes-back.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_7156697/nutlabel-7157988_en_in_08901499027511_2602271000_n_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-plus-multigrain.html" },
+  { file: "real-honey-corn-flakes-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501743/prod_img-940055_en_in_08901499008695_2606111126_p_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-real-honey.html" },
+  { file: "real-honey-corn-flakes-back.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501743/nutlabel-2720453_en_in_08901499008695_2605141502_n_1.png", page: "https://www.kelloggs.com/en-in/products/corn-flakes/corn-flakes-real-honey.html" },
+  { file: "chocos-fills-double-chocolaty-front.png", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_6661876/prod_img-939995_en_in_08901499009623_2508221748_p_1.png", page: "https://www.kelloggs.com/en-in/products/chocos/kelloggs-chocos-fills-double-chocolaty.html" },
+  { file: "chocos-fills-double-chocolaty-back.jpg", src: "https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_6661876/nutlabel-6661881_en_in_08901499009623_2508221748_n_1.jpg", page: "https://www.kelloggs.com/en-in/products/chocos/kelloggs-chocos-fills-double-chocolaty.html" },
+];
+
+const grid = document.getElementById('grid');
+grid.innerHTML = images.map(img => `
+  <div class="item">
+    <img src="${img.src}" alt="${img.file}" onerror="this.parentElement.querySelector('.broken').style.display='block'; this.style.display='none';">
+    <div class="broken" style="display:none;">Didn't load here — <a href="${img.page}" target="_blank">open the product page instead</a> and save the image from there.</div>
+    <div class="filename">Save as: <b>${img.file}</b></div>
+    <div class="label"><a href="${img.page}" target="_blank">Source page ↗</a></div>
+  </div>
+`).join('');
+</script>
+
+</body>
+</html>
