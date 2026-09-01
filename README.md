@@ -1,6 +1,6 @@
 # Poshan Score — landing page
 
-Five static HTML files, no build step, no dependencies:
+Five static HTML files, no build step, no dependencies, plus one script:
 
 - `index.html` — the landing page (default root file both platforms look for)
 - `browse.html` — Browse page: 19 real products, scored per age band
@@ -9,71 +9,151 @@ Five static HTML files, no build step, no dependencies:
   NASEM/IOM, FSSAI)
 - `why-we-do-this.html` — the founder-story page, with a scroll-linked
   timeline animation
-- `cereals.html` — the Cereal Aisle: exactly 29 named breakfast-cereal
-  products (a fixed list, not editable via the UI), with a search box, the
-  same age tabs and 10-metric scoring as Browse, and researched ingredient
-  panels in place of label photos (see note below on why there are no photos)
+- `cereals.html` — the Cereal Aisle: 18 breakfast-cereal products (started
+  as 29 from a Blinkit list, cut down to only those independently
+  verifiable — see below), with a search box, the same age tabs and
+  10-metric scoring as Browse, front/back flip-to-zoom photo cards, and
+  a "Losing points on:" breakdown on every card that isn't a perfect score
+- `download-images.sh` — **run this once before deploying** — fetches the
+  real product photos `cereals.html` references into a local `images/`
+  folder (see below for why this step is separate)
 
-Keep all five files in the same folder when you upload — the links between
-them are relative paths, so no config needed.
+Keep all five HTML files (and the `images/` folder, once populated) in the
+same folder when you upload — the links between them are relative paths,
+so no config needed beyond running the download script first.
 
 ## About the Cereal Aisle page's data and images
 
-Unlike the original 19 products (which you photographed yourself), the 29
-cereals were researched from retailer nutrition panels and brand sites, not
-from physical labels.
+This page started as all 29 products from the Blinkit list you sent. **18
+remain**, split into two confidence levels:
+
+**7 fully confirmed** — every ingredient and every nutrition figure
+independently verified from an official brand site or retailer's published
+nutrition table:
+1. Kellogg's Multigrain Chocos More Chocolatey, No-Maida
+2. Kellogg's Original Corn Flakes
+3. Slurrp Farm Choco Crunch Breakfast Cereal for Kids
+4. Kellogg's Almonds & Honey Corn Flakes
+5. Tata Soulfull Choco Fills Ragi Bites Cereal
+6. Kellogg's Special K Original Cereal with Whole Wheat
+7. Bagrry's Corn Flakes Plus Original & Healthier (with Fibre Power)
+
+**11 with a confirmed ingredient list but one or more estimated nutrition
+figures** (marked `est.` on their card, with the specific estimate
+explained in that product's own ingredient text):
+- Kellogg's Multigrain Chocos Variety Pack, Moons & Stars, Crunchy Bites
+  Kids Cereal, Chocos Multigrain Moons & Stars Chocos, and Moons & Stars
+  Kids Cereal — five retailer listings that are, per Kellogg's own
+  product-line page, the same confirmed Multigrain Chocos formulation in
+  different pack sizes/shapes; nutrition figures carried over from the
+  confirmed base product
+- Kellogg's Froot Loops — full ingredient list confirmed from Kellogg's
+  India site (and confirmed to use natural-derived colours, not the
+  synthetic dyes in the US version); sugar/sodium not published
+- Kellogg's Multigrain Plus Corn Flakes — full ingredient list confirmed
+  from Amazon India (includes a synthetic colour and artificial coconut
+  flavouring); sugar/sodium not published
+- Kellogg's Real Honey Corn Flakes — full ingredient list confirmed from
+  Kellogg's India site; sugar/sodium estimated from its confirmed sibling,
+  Almonds & Honey Corn Flakes
+- Kellogg's Double Chocolaty Fills Chocos and its retailer-duplicate
+  listing, Chocos Fills Double Chocolaty Cereal — full ingredient list
+  confirmed from Kellogg's India site; exact fat/sugar not published
+- Tata Soulfull Ragi Bites Choco 7 Grains (No Maida) — full ingredient
+  list confirmed from a retailer listing; fat/fiber estimated from its
+  confirmed sibling, Tata Soulfull Choco Fills Ragi Bites
+
+**11 removed entirely** — neither ingredients nor nutrition data found
+anywhere searchable, mostly smaller/budget brands or bundle packs: Nestle
+Munch Choco Fills Cereal, Little Joys Millet Chocos Crunch, Kellogg's
+Strawberry Puree Corn Flakes, 8AM Corn Flakes Family Pack, Kwality
+Multigrain Choco Flakes, Tata Soulfull Chocos Variety Pack Cereal Combo,
+Kwality Corn Flakes, Parle Hide & Seek Fills, Kellogg's All Bran Wheat
+Flakes, Kellogg's Protein Chocos, and Kellogg's Choco Fills Kids Cereal
+(Caramel Flavour). If you can find a published nutrition table or ingredient
+photo for any of these, they can be added back — follow the data format in
+`cereals.html`'s `products` array.
 
 **On the front/back flip cards:** every product card has a tab that flips
 between front and back on click, plus a zoom button that pops it into a
-larger lightbox view — that interaction is fully built. What's *not* built
-in is real photos. I tried to source them from the Blinkit links in your
-spreadsheet and from Amazon as a backup, and both sites actively block
-automated fetching (bot detection on Blinkit, robots.txt disallow on
-Amazon) — this isn't a gap in effort, it's those sites deliberately
-preventing exactly this kind of automated image-pulling. Your spreadsheet's
-own "Back links" column already flagged this same limitation honestly
-("back-of-pack has NOT been claimed as verified... deliberately marks back
-verification conservatively rather than inventing a direct back-image
-URL").
+larger lightbox view. **14 of the 18 products have real photos.**
 
-**To add real photos**, open `cereals.html`, find the product in the
-`products` array, and fill in its `frontImg` and `backImg` fields with a
-real image URL, e.g.:
+**Images are hosted locally, not hotlinked** — `cereals.html` references
+paths like `images/multigrain-chocos-more-chocolatey-front.png`, not
+external URLs. This matters because the original source
+(`images.kglobalservices.com`, Kellogg's own CDN) is outside your control
+and could move or change; local files won't break if that happens.
+
+**One thing you need to do before deploying**: run `download-images.sh`
+once, from the same folder as `cereals.html`. This is a small script that
+fetches all 19 image files (14 front photos + 11 nutrition-label/back
+photos, some URLs shared between near-duplicate products) into an
+`images/` folder using the exact filenames `cereals.html` already expects.
+It needs a machine with normal, unrestricted internet access — Kellogg's,
+Slurrp Farm, and Bagrry's own sites aren't blocked the way Blinkit and
+Amazon are, so a plain `curl` from your own laptop works fine:
+```
+chmod +x download-images.sh
+./download-images.sh
+```
+Until you run it, those 14 cards will show a broken-image icon instead of
+a photo (the placeholder ingredient-panel fallback only triggers when a
+field is empty, not when a path is set but the file is missing) — so run
+the script before you deploy, not after.
+
+Where each image came from:
+- **11 Kellogg's products**: front pack photo + the brand's own official
+  nutrition-label photo as the "back," both from kelloggs.com/en-in's
+  product pages.
+- **Slurrp Farm**: front pack photo from slurrpfarm.com; the "back" is the
+  second image in their product gallery, which is usually the pack's back
+  but wasn't independently confirmed — treat it with slightly less
+  certainty than the Kellogg's ones.
+- **Bagrry's**: front pack photo from bagrrys.com; no back image (couldn't
+  confirm which of their gallery images was the actual back of pack).
+
+**4 products still show the researched ingredient panel instead of a
+photo**: Kellogg's Special K (no India-specific product page found on
+kelloggs.com), Tata Soulfull's two entries (no fetchable official product
+page found), and Bagrry's back side. Their `frontImg`/`backImg` fields are
+still empty strings, so the placeholder renders correctly for these.
+
+**To add or replace a photo later**, open `cereals.html`, find the product
+in the `products` array, and edit its `frontImg` / `backImg` fields to
+point at a new local path (drop the file into `images/` first) or, if you
+prefer, a direct URL — either works, since the render code just checks
+whether the field is non-empty:
 ```js
 { name:"Kellogg's Multigrain Chocos More Chocolatey, No-Maida", servingG:30,
-  frontImg:"https://your-image-url.jpg", backImg:"https://your-image-url-2.jpg",
+  frontImg:"images/your-new-file.jpg", backImg:"images/your-other-file.jpg",
   ...
 ```
-Leave either field as `""` to keep the placeholder for that side. The
-easiest real-world way to get these URLs: open each Blinkit product page in
-an ordinary browser (not blocked, since you're not an automated fetcher),
-right-click the front or back image in the carousel, and choose "Copy image
-address." If you'd rather host the images yourself instead of hotlinking to
-Blinkit, save them into an `/images` folder next to the HTML files and
-reference them as relative paths instead (e.g. `frontImg:"images/1-front.jpg"`).
+Leave a field as `""` to fall back to the placeholder for that side.
 
-A few more things worth knowing:
-
-- **Confirmed vs. estimated nutrition data.** About a third of the 29 have
-  nutrition figures confirmed from an official brand or retailer source
-  (Kellogg's Multigrain Chocos, Kellogg's Corn Flakes, Slurrp Farm Choco
-  Crunch, Tata Soulfull Ragi Bites and Choco Fills, Kellogg's Special K).
-  The rest — mostly near-duplicate retailer listings of the same underlying
-  product, and a few brands with limited public nutrition data (Kwality,
-  8AM, Little Joys, Nestle Munch, Parle Hide & Seek Fills) — are marked
-  `est.` on their card and use the closest confirmed sibling product or
-  category norm. Parle Hide & Seek Fills has the lowest confidence of the
-  29 — its exact product category wasn't fully confirmed during research.
-- **Same scoring engine as Browse**, just with per-100g figures scaled to
-  a 30g serving internally, rather than pre-computed per-serving numbers.
+**Same scoring engine as Browse**, just with per-100g figures scaled to a
+30g serving internally, rather than pre-computed per-serving numbers.
 
 
+
+## Before you deploy: run the image download script
+
+```
+chmod +x download-images.sh
+./download-images.sh
+```
+
+Do this from your own machine (not inside any restricted/sandboxed
+environment) before either deployment path below — it creates the
+`images/` folder that 14 of the Cereal Aisle cards need. Skipping this
+step means those cards show broken-image icons instead of photos once
+live.
 
 ## Deploy on GitHub Pages
 
 1. Create a new repo on GitHub (e.g. `poshan-score`).
-2. Upload all five HTML files to the repo root (drag-and-drop
-   on the GitHub web UI works fine — no git CLI required).
+2. Upload all five HTML files **and the `images/` folder** to the repo
+   root (drag-and-drop on the GitHub web UI works fine — no git CLI
+   required).
 3. Go to **Settings → Pages**.
 4. Under **Build and deployment**, set **Source** to "Deploy from a branch",
    branch `main`, folder `/ (root)`. Save.
@@ -85,7 +165,8 @@ A few more things worth knowing:
 **Option A — no GitHub needed (fastest):**
 1. Go to the Cloudflare dashboard → **Workers & Pages** → **Create** →
    **Pages** → **Upload assets**.
-2. Drag in the whole folder (all five HTML files).
+2. Drag in the whole folder (all five HTML files **and the `images/`
+   folder**).
 3. Give the project a name and click **Deploy**. Cloudflare gives you a
    `*.pages.dev` URL immediately.
 

@@ -100,7 +100,7 @@
   /* ---- flip tab: front/back, click to flip, zoom to lightbox ----
      Real photo URLs drop into product.frontImg / product.backImg later —
      until then, both faces render a styled placeholder. */
-  .flip-tab-wrap{ perspective:900px; height:150px; background:var(--bg-alt); position:relative; overflow:hidden; }
+  .flip-tab-wrap{ perspective:900px; height:190px; background:var(--bg-alt); position:relative; overflow:hidden; }
   .flip-tab{
     position:relative; width:100%; height:100%; transform-style:preserve-3d;
     transition:transform .6s cubic-bezier(.2,.8,.2,1); cursor:pointer;
@@ -112,7 +112,7 @@
     overflow:hidden;
   }
   .tab-face.tab-back{ transform:rotateY(180deg); }
-  .tab-face img{ width:100%; height:100%; object-fit:cover; }
+  .tab-face img{ width:100%; height:100%; object-fit:contain; padding:8px; box-sizing:border-box; }
 
   /* placeholder faces (used until real images are wired in) */
   .tab-placeholder{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; width:100%; height:100%; }
@@ -228,28 +228,52 @@
 </nav>
 
 <header class="hero">
-  <div class="eyebrow">Cereal Aisle &nbsp;·&nbsp; 29 SKUs, one Blinkit list</div>
+  <div class="eyebrow">Cereal Aisle &nbsp;·&nbsp; 18 of 29 verified</div>
   <h1>Kids' breakfast cereals, scored the same way.</h1>
   <p class="lede">
-    This page holds exactly the 29 products from your Blinkit list — nothing added, nothing left out.
-    Every score uses the same <a href="age-metrics.html">10-metric, age-banded rubric</a> as the rest of
-    the site. <b>Buy on Amazon</b> buttons show on Good and Excellent-tier products only.
+    This page started as all 29 products from your Blinkit list. <b>18 remain</b> — 7 with every
+    ingredient and every nutrition figure independently confirmed, and 11 more with a fully confirmed
+    ingredient list but one or more nutrition figures estimated from a confirmed sibling product (each
+    marked <b>est.</b> on its card, with the exact estimate explained). The other 11 had neither
+    confirmed and were removed entirely. Every score uses the same
+    <a href="age-metrics.html">10-metric, age-banded rubric</a> as the rest of the site. <b>Buy on
+    Amazon</b> buttons show on Good and Excellent-tier products only.
   </p>
 </header>
 
 <div class="note-callout">
+  <b>Two confidence levels on this page.</b> Cards with no "est." flag have every number read from an
+  official source. Cards marked <b>est.</b> have a fully confirmed ingredient list — you can trust what's
+  in the label panel — but one or more nutrition figures (usually sugar or sodium) weren't published
+  anywhere searchable, so those specific numbers were estimated from a confirmed sibling product on this
+  page and the estimate is explained in that product's own ingredient panel text.
+</div>
+
+<div class="note-callout" style="margin-top:12px;">
+  <b>The 11 that were removed entirely</b> (not estimated — genuinely nothing found): Nestle Munch Choco
+  Fills, Little Joys Millet Chocos Crunch, Strawberry Puree Corn Flakes, 8AM Corn Flakes, Kwality
+  Multigrain Choco Flakes, Kwality Corn Flakes, Tata Soulfull Variety Pack Combo, Parle Hide &amp; Seek
+  Fills, All Bran Wheat Flakes, Protein Chocos, and Choco Fills Kids Cereal (Caramel Flavour) — mostly
+  smaller/budget brands or bundle packs with no nutrition panel published anywhere I could find. Full
+  list and reasoning in the README.
+</div>
+
+<div class="note-callout" style="margin-top:12px;">
   <b>Tap any product's tab to flip between front and back, and use the zoom icon to pop it into a
-  larger view.</b> Real photos aren't wired in yet — Blinkit and Amazon both actively block automated
-  page fetching, so I couldn't pull image URLs from the sheet you sent, even with the exact product
-  pages linked. The flip/zoom feature is fully built and ready — each product just needs a real image
-  URL dropped into its <code>frontImg</code> / <code>backImg</code> field in the code (see README for
-  exactly where). Until then, both faces show the researched ingredient panel instead of a photo.
+  larger view.</b> 14 of these 18 products now show real photos, pulled directly from Kellogg's own
+  India product pages, Slurrp Farm's site, and Bagrry's site — none of these block automated fetching
+  the way Blinkit and Amazon do. For Kellogg's products, the "back" side is the brand's own official
+  nutrition-label photo. For Slurrp Farm, the back image is a best guess at the second photo in their
+  product gallery (usually the back of pack, but not independently confirmed) — treat that one with
+  slightly less certainty than the Kellogg's ones. The remaining 4 products (Special K, Bagrry's back
+  side, and the two Tata Soulfull entries) still show the researched ingredient panel instead of a photo,
+  since no fetchable image source was found for them.
 </div>
 
 <div class="controls">
   <div class="search-box">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <input type="text" id="searchInput" placeholder="Search these 29 products…" autocomplete="off">
+    <input type="text" id="searchInput" placeholder="Search these products…" autocomplete="off">
   </div>
   <div class="search-count" id="searchCount"></div>
 
@@ -272,10 +296,11 @@
 <p class="lede" style="max-width:900px; margin:20px auto; padding:0 20px; font-size:12px;">
   Sources and thresholds: same as <a href="age-metrics.html">Age &amp; Metrics</a> — ICMR-NIN 2020, WHO
   sugar/saturated-fat guidance, NASEM/IOM DRIs (sodium, fiber proxy), FSSAI trans-fat and additive
-  regulations, and FSSAI's proposed HFSS warning (Supreme Court filing, 29 Aug 2026). Nutrition figures
-  for many of these 29 come from retailer nutrition panels and brand sites rather than a physical label
-  photo — products marked <b>est.</b> have one or more figures estimated from the closest confirmed
-  sibling product or category norm, not read directly.
+  regulations, and FSSAI's proposed HFSS warning (Supreme Court filing, 29 Aug 2026). Every product's
+  full ingredient panel is confirmed from an official brand site or a retailer's published listing.
+  Products marked <b>est.</b> have one or more nutrition figures (typically sugar or sodium) estimated
+  from a confirmed sibling product on this page, rather than read directly — see that product's
+  ingredient panel text for exactly which figures and why.
 </p>
 
 <footer>
@@ -300,122 +325,82 @@ const ageRefs = {
    preservative/additive/transFat/baseIntegrity are fixed 0/1/2, same across ages.
    est:true = one or more figures estimated from a sibling product or category norm. */
 const products = [
-  { name:"Kellogg's Multigrain Chocos More Chocolatey, No-Maida", servingG:30, frontImg:"", backImg:"",
+  { name:"Kellogg's Multigrain Chocos More Chocolatey, No-Maida", servingG:30, frontImg:"images/multigrain-chocos-more-chocolatey-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:false,
     ingredients:"Multigrain Flour Mix 64.8% (Wheat, Jowar, Rice, Corn), Sugar, Cocoa Solids, Minerals, Cereal Extract, Iodized Salt, Colours (INS 150a, INS 150d), Edible Vegetable Oil (Palmolein), Flavours (Nature Identical & Artificial – Cream), Vitamins, Antioxidant (INS 307b)." },
-  { name:"Kellogg's Multigrain Chocos Variety Pack", servingG:30, frontImg:"", backImg:"",
-    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same formulation as Multigrain Chocos More Chocolatey — this is a bundled variety pack of the same base cereal." },
-  { name:"Kellogg's Original Corn Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:8.5, addedSugar:8.0, sodium:600, satFat:0.2, fiber:3.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Corn Grits (90%), Sugar, Cereal Extract, Iodized Salt, Vitamins, Antioxidant (INS 307b), Minerals. Sugar and sodium are category-typical estimates — the India pack's exact per-100g sugar figure wasn't confirmed." },
-  { name:"Kellogg's Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)", servingG:30, frontImg:"", backImg:"",
-    sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Multigrain Flour Mix 53.7% (Wheat, Oats, Corn), Choco Cream {Sugar, Vegetable Oil (Sunflower, Palm), Cocoa Solids, Milk Solids, Emulsifier (INS 322(i)), Flavour (Natural)}, Sugar, Cocoa Solids, Iodized Salt, Antioxidant (INS 307b), Vitamins." },
-  { name:"Kellogg's Multigrain Chocos Moons & Stars", servingG:30, frontImg:"", backImg:"",
-    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos — shaped as moons and stars." },
-  { name:"Slurrp Farm Choco Crunch Breakfast Cereal for Kids", servingG:30, frontImg:"", backImg:"",
+  { name:"Kellogg's Original Corn Flakes", servingG:30, frontImg:"images/corn-flakes-original-front.png", backImg:"images/corn-flakes-original-back.png",
+    sugar:9.2, addedSugar:8.0, sodium:490, satFat:0.6, fiber:2.5, protein:6.7,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
+    ingredients:"Corn Grits (90%), Sugar, Cereal Extract, Iodized Salt, Vitamins, Antioxidant (INS 307b), Minerals. Nutrition confirmed from official India retailer listings (Zepto)." },
+  { name:"Slurrp Farm Choco Crunch Breakfast Cereal for Kids", servingG:30, frontImg:"images/slurrp-farm-choco-crunch-front.jpg", backImg:"images/slurrp-farm-choco-crunch-back.jpg",
     sugar:24.6, addedSugar:20.9, sodium:3.0, satFat:0.8, fiber:4.9, protein:7.3,
     preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
     ingredients:"Wholegrain Millets — Sorghum (Jowar) & Finger Millet (Ragi) 23.7%, Raw Unrefined Sugar, Corn, Rice Flour, Cocoa, Rice Bran Oil, Vanilla Extract, Natural Flavours, Natural Vitamin E. No artificial colours, additives, or preservatives declared." },
-  { name:"Kellogg's Froot Loops - Crunchy Multigrain Cereal", servingG:30, frontImg:"", backImg:"",
-    sugar:30.0, addedSugar:27.0, sodium:400, satFat:1.0, fiber:5.0, protein:6.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"India-specific ingredient panel not confirmed — figures estimated from the fruit-loop category. Global Froot Loops formulations typically include synthetic colours; whether the India SKU matches wasn't independently verified." },
-  { name:"Kellogg's Multigrain Chocos Crunchy Bites Kids Cereal", servingG:30, frontImg:"", backImg:"",
-    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos, in a smaller bite shape." },
-  { name:"Kellogg's Almonds & Honey Corn Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:12.0, addedSugar:10.0, sodium:550, satFat:1.0, fiber:4.0, protein:8.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Corn flakes base with real almonds and honey — full ingredient panel not independently confirmed; figures estimated from the standard Corn Flakes base plus honey." },
-  { name:"Kellogg's Chocos Fills Double Chocolaty Cereal", servingG:30, frontImg:"", backImg:"",
-    sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same formulation as Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)." },
-  { name:"Kellogg's Multigrain Plus Corn Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:9.0, addedSugar:8.5, sodium:500, satFat:0.3, fiber:5.0, protein:8.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Corn flakes base with added multigrain flour — full panel not independently confirmed; estimated from the Corn Flakes Original base." },
-  { name:"Nestle Munch Choco Fills Cereal", servingG:30, frontImg:"", backImg:"",
-    sugar:28.0, addedSugar:26.0, sodium:250, satFat:4.0, fiber:4.0, protein:7.0,
-    preservative:2, additive:1, transFat:1, baseIntegrity:1, est:true,
-    ingredients:"Full ingredient panel not independently confirmed — figures estimated from the cream-filled chocolate cereal category, using Kellogg's Choco Fills as the closest comparable formulation." },
-  { name:"Tata Soulfull Ragi Bites Choco 7 Grains Kids Breakfast Cereal (No Maida)", servingG:30, frontImg:"", backImg:"",
-    sugar:26.0, addedSugar:25.0, sodium:130, satFat:4.0, fiber:5.0, protein:6.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Ragi (25%), Refined Sugar, Rice, Whole Wheat Flour, Maize, Bengal Gram Dal, Cocoa Solids, Jowar, Oats, Palmolein Oil, Nature-Identical Flavouring, Iodised Salt, Stabilizer (INS 170), Malt Extract, Colour (INS 150d), Antioxidant (INS 320). Fat and fiber figures estimated from the closest confirmed sibling (Choco Fills variant)." },
-  { name:"Little Joys Millet Chocos Crunch", servingG:30, frontImg:"", backImg:"",
-    sugar:22.0, addedSugar:18.0, sodium:50, satFat:1.0, fiber:5.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Millet-based (ragi, jowar, foxtail, red rice), jaggery-sweetened, no maida claimed. Full panel not independently confirmed; estimated from the millet-cereal category using Slurrp Farm as a reference point." },
-  { name:"Kellogg's Chocos Multigrain Moons & Stars Chocos", servingG:30, frontImg:"", backImg:"",
-    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars." },
+  { name:"Kellogg's Almonds & Honey Corn Flakes", servingG:30, frontImg:"images/almonds-honey-corn-flakes-front.png", backImg:"images/almonds-honey-corn-flakes-back.png",
+    sugar:30.0, addedSugar:28.5, sodium:430, satFat:0.6, fiber:2.0, protein:6.5,
+    preservative:2, additive:1, transFat:2, baseIntegrity:2, est:false,
+    ingredients:"Corn Grits (62.7%), Sugar, Sliced Almonds (7.5%), Cereal Extract, Honey (1.7%), Iodized Salt, Dextrose, Vitamins, Antioxidant (INS 307b), Flavour (Nature Identical), Minerals, Colour (INS 150d). Nutrition confirmed from official India retailer listings (Zepto) — added sugar is 28.5g/100g, far higher than an earlier estimate on this card assumed. Corrected after verification." },
   { name:"Tata Soulfull Choco Fills Ragi Bites Cereal", servingG:30, frontImg:"", backImg:"",
     sugar:29.3, addedSugar:29.0, sodium:126, satFat:11.2, fiber:6.7, protein:5.1,
     preservative:2, additive:0, transFat:2, baseIntegrity:1, est:false,
     ingredients:"Mixed Grain Flours 53% [Ragi 34.1%, Rice, Chana Dal], Refined Sugar, Interesterified Vegetable Fat, Cocoa Solids, Milk Solids, Nature-Identical Flavouring, Iodised Salt, Emulsifier (INS 322(i)), Anticaking Agent (INS 170(i)), Colour (INS 150d), Refined Palmolein Oil, Antioxidant (INS 320). Saturated fat is unusually high for the category at 11.2g/100g." },
   { name:"Kellogg's Special K Original Cereal with Whole Wheat", servingG:30, frontImg:"", backImg:"",
-    sugar:15.0, addedSugar:13.0, sodium:336, satFat:0.3, fiber:6.0, protein:8.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Rice (47%), Wholewheat (37%), Sugar, Barley (5%), Malted Barley Flour, Salt, Barley Malt Extract, Vitamins. No artificial colours, flavours, or preservatives. Figures from the closest confirmed international formulation; India-specific pack not independently verified." },
-  { name:"Kellogg's Strawberry Puree Corn Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:11.0, addedSugar:9.5, sodium:550, satFat:0.3, fiber:3.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Corn flakes base with strawberry puree — full panel not independently confirmed; estimated from the Corn Flakes Original base plus fruit puree." },
-  { name:"8AM Corn Flakes Family Pack", servingG:30, frontImg:"", backImg:"",
-    sugar:9.0, addedSugar:8.5, sodium:550, satFat:0.3, fiber:3.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Budget corn flakes brand — full panel not independently confirmed; estimated from generic plain corn flakes category norms." },
-  { name:"Kwality Multigrain Choco Flakes - No Maida", servingG:30, frontImg:"", backImg:"",
-    sugar:28.0, addedSugar:26.0, sodium:260, satFat:1.5, fiber:5.0, protein:7.0,
-    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Full panel not independently confirmed — figures estimated from the multigrain choco-flakes category, using Kellogg's Multigrain Chocos as a reference point." },
-  { name:"Tata Soulfull Chocos Variety Pack Cereal Combo", servingG:30, frontImg:"", backImg:"",
-    sugar:29.3, addedSugar:29.0, sodium:126, satFat:11.2, fiber:6.7, protein:5.1,
-    preservative:2, additive:0, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Combo/variety pack bundling multiple Soulfull SKUs — scored using the flagship Choco Fills Ragi Bites formulation as the representative product in the bundle." },
-  { name:"Bagrry's Corn Flakes Plus Original & Healthier (with Fibre Power)", servingG:30, frontImg:"", backImg:"",
-    sugar:9.0, addedSugar:8.0, sodium:500, satFat:0.3, fiber:6.0, protein:8.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Corn flakes with added fibre — full panel not independently confirmed; fiber figure estimated slightly higher than standard corn flakes given the brand's stated 'Fibre Power' positioning." },
-  { name:"Kellogg's Multigrain Chocos Moons & Stars Kids Cereal", servingG:30, frontImg:"", backImg:"",
+    sugar:26.5, addedSugar:25.5, sodium:480, satFat:0.4, fiber:5.1, protein:8.2,
+    preservative:2, additive:1, transFat:2, baseIntegrity:2, est:false,
+    ingredients:"Rice (36.2%), Whole Wheat (33.2%), Sugar, Wheat Bran (4.7%), Liquid Glucose, Iodized Salt, Cereal Extract, Vitamins, Mineral, Antioxidant (INS 320 — BHA). Nutrition confirmed from official India retailer listings (Zepto). Important correction: an earlier version of this card used a lighter European formulation as a proxy (13g added sugar/100g); the actual India pack runs nearly double that at 25.5g/100g — almost as sweet as a chocolate cereal, despite Special K's 'diet' positioning." },
+  { name:"Bagrry's Corn Flakes Plus Original & Healthier (with Fibre Power)", servingG:30, frontImg:"images/bagrrys-corn-flakes-plus-front.jpg", backImg:"",
+    sugar:7.0, addedSugar:6.5, sodium:548, satFat:0.4, fiber:4.3, protein:8.7,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
+    ingredients:"Corn Grit (89%), Sugar, Dietary Fibre 1.6% (Oligofructose 1.5%, Wheat Fibre 0.1%), Iodised Salt, Cereal Extract, Antioxidants (INS 322 & INS 307b). Nutrition confirmed from official India retailer listings (Zepto) — genuinely low sugar and solidly higher fiber than a standard corn flakes, matching the brand's fibre-forward positioning." },
+
+  { name:"Kellogg's Multigrain Chocos Variety Pack", servingG:30, frontImg:"", backImg:"",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars." },
-  { name:"Kellogg's Real Honey Corn Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:12.0, addedSugar:10.0, sodium:550, satFat:0.2, fiber:3.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Corn flakes base with honey — full panel not independently confirmed; estimated from the Corn Flakes Original base plus honey." },
-  { name:"Kwality Corn Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:8.0, addedSugar:7.5, sodium:550, satFat:0.3, fiber:3.0, protein:7.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Budget plain corn flakes — full panel not independently confirmed; estimated from generic corn flakes category norms." },
-  { name:"Parle Hide & Seek Fills", servingG:30, frontImg:"", backImg:"",
-    sugar:30.0, addedSugar:28.0, sodium:200, satFat:6.0, fiber:2.0, protein:6.0,
-    preservative:1, additive:1, transFat:1, baseIntegrity:1, est:true,
-    ingredients:"Product identity and category (cereal vs. filled-biscuit crossover) not fully confirmed from research — figures are a cautious category estimate for a cream-filled snack. Treat this entry's confidence as low until the pack is verified directly." },
-  { name:"Kellogg's All Bran Wheat Flakes", servingG:30, frontImg:"", backImg:"",
-    sugar:18.0, addedSugar:15.0, sodium:500, satFat:0.5, fiber:18.0, protein:10.0,
-    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
-    ingredients:"Wheat bran-based — full panel not independently confirmed; fiber figure reflects the bran-cereal category (reliably high), other figures estimated." },
-  { name:"Kellogg's Protein Chocos", servingG:30, frontImg:"", backImg:"",
-    sugar:24.0, addedSugar:22.0, sodium:280, satFat:1.5, fiber:6.0, protein:15.0,
+    ingredients:"Same confirmed formulation as Multigrain Chocos More Chocolatey — Multigrain Flour Mix 64.8% (Wheat, Jowar, Rice, Corn), Sugar, Cocoa Solids, Colours (INS 150a, INS 150d), Palmolein Oil, Antioxidant (INS 307b) — this is a bundled variety pack of that same base cereal, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
+  { name:"Kellogg's Multigrain Chocos Moons & Stars", servingG:30, frontImg:"images/multigrain-chocos-moons-stars-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Multigrain Chocos base with added protein fortification — full panel not independently confirmed; protein figure elevated per the product's stated positioning, other figures estimated from the base Chocos formulation." },
-  { name:"Kellogg's Choco Fills Kids Cereal (Caramel Flavour)", servingG:30, frontImg:"", backImg:"",
+    ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos More Chocolatey — shaped as moons and stars, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
+  { name:"Kellogg's Multigrain Chocos Crunchy Bites Kids Cereal", servingG:30, frontImg:"images/multigrain-chocos-crunchy-bites-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos More Chocolatey, in a smaller bite shape, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
+  { name:"Kellogg's Chocos Multigrain Moons & Stars Chocos", servingG:30, frontImg:"images/multigrain-chocos-moons-stars-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
+  { name:"Kellogg's Multigrain Chocos Moons & Stars Kids Cereal", servingG:30, frontImg:"images/multigrain-chocos-moons-stars-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+    sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
+
+  { name:"Kellogg's Froot Loops - Crunchy Multigrain Cereal", servingG:30, frontImg:"images/froot-loops-front.png", backImg:"images/froot-loops-back.png",
+    sugar:30.0, addedSugar:27.0, sodium:400, satFat:1.0, fiber:5.0, protein:6.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Multigrain Flour Mix 71.8% (Corn Flour 40.2%, Wheat Flour 18.4%, Whole Oats Flour 8.6%, Refined Wheat Flour/Maida 4.6%), Sugar, Iodized Salt, Minerals, Colours (INS 162, INS 160c(i), INS 100(i) — natural-derived: beetroot, paprika, turmeric extracts, not synthetic dyes), Vegetable Extract (Black Carrot Extract), Flavour (Nature Identical), Vitamins, Antioxidant (INS 307b). Full ingredient list confirmed from Kellogg's India's own site — no preservatives, and the colours are natural-sourced rather than the synthetic Red 40/Blue 1 used in the US version. Exact sugar/sodium grams for this India SKU still not published; those two figures remain estimated." },
+  { name:"Kellogg's Multigrain Plus Corn Flakes", servingG:30, frontImg:"images/multigrain-plus-corn-flakes-front.png", backImg:"images/multigrain-plus-corn-flakes-back.png",
+    sugar:11.0, addedSugar:10.5, sodium:500, satFat:0.4, fiber:6.5, protein:8.5,
+    preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Multigrain Mix 82.6% (Corn Grits & Meal 26.2%, Wheat & Wheat Flour 21.8%, Rice & Rice Flour 15%, Ragi Flour 13.1%, Rolled Barley 6.5%), Sugar, Cereal Extract, Oligofructose, Wheat Bran, Iodized Salt, Cocoa Solids, Vitamins, Flavours (Nature Identical & Artificial — Coconut), Antioxidant (INS 307b), Colour (INS 150d), Mineral. Full ingredient list confirmed from Amazon India's official listing — note the synthetic colour and artificial coconut flavouring, contrary to what its 'multigrain' positioning might suggest. Exact per-100g sugar/sodium not published; those figures remain estimated." },
+  { name:"Kellogg's Real Honey Corn Flakes", servingG:30, frontImg:"images/real-honey-corn-flakes-front.png", backImg:"images/real-honey-corn-flakes-back.png",
+    sugar:27.0, addedSugar:26.0, sodium:450, satFat:0.2, fiber:2.2, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Corn Grits, Sugar, Honey (2.8%), Cereal Extract, Iodized Salt, Vitamins, Antioxidant (INS 307b), Flavour (Nature Identical), Minerals. Full ingredient list confirmed from Kellogg's India's own site — no synthetic colour listed. Exact per-100g sugar/sodium not published for this specific variant; figures estimated from its confirmed sibling, Almonds & Honey Corn Flakes, minus the almond content." },
+
+  { name:"Kellogg's Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)", servingG:30, frontImg:"images/chocos-fills-double-chocolaty-front.png", backImg:"images/chocos-fills-double-chocolaty-back.jpg",
     sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
     preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
-    ingredients:"Same cream-filled formulation family as Double Chocolaty Fills Chocos, caramel flavour variant — figures estimated from that sibling product." },
+    ingredients:"Multigrain Flour Mix 53.7% (Wheat Flour 35.7%, Whole Oats Flour 9%, Corn Meal 9%), Choco Cream {Sugar, Edible Vegetable Oil (Sunflower Oil, Palm Oil), Cocoa Solids 6.3%, Milk Solids, Emulsifier (INS 322(i)), Flavour (Natural)}, Sugar, Cocoa Solids 5%, Iodized Salt, Antioxidant (INS 307b), Vitamins. Full ingredient list confirmed from Kellogg's India's own site. Exact per-100g sugar/fat figures not published; estimated from the category (cream-filled chocos typically run higher fat/sugar than plain)." },
+  { name:"Kellogg's Chocos Fills Double Chocolaty Cereal", servingG:30, frontImg:"images/chocos-fills-double-chocolaty-front.png", backImg:"images/chocos-fills-double-chocolaty-back.jpg",
+    sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
+    preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
+    ingredients:"Same confirmed formulation as Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside) — see that entry for the full confirmed ingredient list. Nutrition figures carried over from that sibling product." },
+
+  { name:"Tata Soulfull Ragi Bites Choco 7 Grains Kids Breakfast Cereal (No Maida)", servingG:30, frontImg:"", backImg:"",
+    sugar:26.0, addedSugar:25.0, sodium:130, satFat:4.0, fiber:5.0, protein:6.0,
+    preservative:2, additive:1, transFat:2, baseIntegrity:2, est:true,
+    ingredients:"Ragi (25%), Refined Sugar, Rice, Whole Wheat Flour, Maize, Bengal Gram Dal, Cocoa Solids, Jowar, Oats, Palmolein Oil, Nature-Identical Flavouring, Iodised Salt, Stabilizer (INS 170), Malt Extract, Colour (INS 150d), Antioxidant (INS 320). Full ingredient list confirmed from a retailer listing. Fat and fiber figures estimated from its confirmed sibling on this page, Tata Soulfull Choco Fills Ragi Bites (which has a cream filling and is likely higher-fat than this plain version)." },
 ];
 
 /* ---------------- scoring (same rubric as browse.html) ---------------- */
