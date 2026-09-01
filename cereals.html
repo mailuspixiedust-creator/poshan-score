@@ -178,12 +178,18 @@
   .tierbadge.caution{ background:var(--red-soft); color:var(--red); }
   .tierbadge.avoid{ background:var(--brown); color:#fff; }
 
-  .score-row{ display:flex; align-items:center; gap:8px; margin:6px 0 10px; flex-wrap:wrap; }
+  .score-row{ display:flex; align-items:center; gap:8px; margin:6px 0 4px; flex-wrap:wrap; }
   .score-num{ font-family:var(--font-display); font-size:19px; color:var(--ink); }
   .score-den{ font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); }
   .pips{ display:flex; gap:3px; margin-left:auto; flex-wrap:wrap; max-width:130px; justify-content:flex-end; }
-  .pip{ width:8px; height:8px; border-radius:50%; }
+  .pip{ width:8px; height:8px; border-radius:50%; cursor:help; }
   .pip.p2{ background:var(--green); } .pip.p1{ background:var(--gold); } .pip.p0{ background:var(--red); }
+
+  .losing-points{ font-size:11px; line-height:1.7; margin:0 0 10px; }
+  .lp-label{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-dim); margin-right:5px; }
+  .lp-item{ display:inline-block; font-family:var(--font-mono); font-size:10px; padding:2px 8px; border-radius:100px; margin:2px 3px 2px 0; }
+  .lp-item.lp-1{ background:var(--gold-soft); color:var(--gold); }
+  .lp-item.lp-0{ background:var(--red-soft); color:var(--red); }
 
   .label-panel{ background:var(--bg-alt); border-radius:10px; padding:10px 12px; margin:10px 0; }
   .label-panel .lp-title{ font-family:var(--font-mono); font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:5px; }
@@ -459,6 +465,7 @@ function scoreProduct(p, age){
 }
 
 const tierLabel = { excellent:'Excellent', good:'Good', caution:'Caution', avoid:'Avoid' };
+const metricNames = ['Sugar','Sodium','Sat Fat','Trans Fat','Fiber','Protein','Preservatives','Additives','Base Integrity','HFSS'];
 let currentAge = '1-3';
 let currentSearch = '';
 
@@ -526,9 +533,10 @@ function render(){
           <span class="tierbadge ${tier}">${tierLabel[tier]}</span>
         </div>
         <div class="score-row">
-          <span class="score-num">${total}</span><span class="score-den">/ 20</span>
-          <div class="pips">${scores.map(s => `<span class="pip p${s}"></span>`).join('')}</div>
+          <span class="score-num" data-target="${total}">0</span><span class="score-den">/ 20</span>
+          <div class="pips">${scores.map((s,i) => `<span class="pip p${s}" title="${metricNames[i]}: ${s}/2"></span>`).join('')}</div>
         </div>
+        ${total < 20 ? `<div class="losing-points"><span class="lp-label">Losing points on:</span> ${scores.map((s,i) => ({s,i})).filter(x => x.s < 2).map(x => `<span class="lp-item lp-${x.s}">${metricNames[x.i]} (${x.s}/2)</span>`).join('')}</div>` : ``}
         <div class="label-panel">
           <div class="lp-title">Ingredients (from research)</div>
           <div class="lp-ingredients">${p.ingredients}</div>
@@ -551,9 +559,24 @@ function render(){
 
   requestAnimationFrame(() => {
     document.querySelectorAll('.pcard').forEach((el, i) => {
-      setTimeout(() => el.classList.add('animate-in'), i * 30);
+      setTimeout(() => {
+        el.classList.add('animate-in');
+        animateScoreCount(el.querySelector('.score-num'));
+      }, i * 30);
     });
   });
+}
+
+function animateScoreCount(el){
+  const target = parseInt(el.getAttribute('data-target'), 10);
+  let current = 0;
+  const step = Math.max(1, Math.round(target / 12));
+  const tick = () => {
+    current = Math.min(target, current + step);
+    el.textContent = current;
+    if (current < target) requestAnimationFrame(tick);
+  };
+  tick();
 }
 
 /* ---------------- tabs ---------------- */
