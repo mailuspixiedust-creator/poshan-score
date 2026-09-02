@@ -1,6 +1,6 @@
 # Poshan Score — landing page
 
-Five static HTML files, no build step, no dependencies, plus one script:
+Five static HTML files, no build step, no dependencies, plus two helpers:
 
 - `index.html` — the landing page (default root file both platforms look for)
 - `browse.html` — Browse page: 19 real products, scored per age band
@@ -14,9 +14,15 @@ Five static HTML files, no build step, no dependencies, plus one script:
   verifiable — see below), with a search box, the same age tabs and
   10-metric scoring as Browse, front/back flip-to-zoom photo cards, and
   a "Losing points on:" breakdown on every card that isn't a perfect score
-- `download-images.sh` — **run this once before deploying** — fetches the
-  real product photos `cereals.html` references into a local `images/`
-  folder (see below for why this step is separate)
+- `save-images-helper.html` — **the easy, no-Terminal way** to get the
+  photos: open it in a browser, right-click-save each image shown
+- `download-images.sh` — **the automated way**, for anyone comfortable with
+  Terminal — fetches the same 19 images into a local `images/` folder in
+  one step
+
+Run one of the two above before deploying — either gets you the same
+`images/` folder `cereals.html` needs (see below for why this step is
+separate).
 
 Keep all five HTML files (and the `images/` folder, once populated) in the
 same folder when you upload — the links between them are relative paths,
@@ -135,7 +141,22 @@ Leave a field as `""` to fall back to the placeholder for that side.
 
 
 
-## Before you deploy: run the image download script
+## Before you deploy: get the images hosted locally
+
+**Option A — no Terminal needed:** open `save-images-helper.html` in your
+browser (just double-click the file). It shows all 19 images on one page.
+For each one, right-click → "Save image as" → save it into an `images`
+folder (create one next to your HTML files if it doesn't exist yet) using
+the exact filename printed under each image. If any image shows as broken
+on this helper page, click the "Source page" link next to it and save the
+image directly from Kellogg's/Slurrp Farm/Bagrry's own site instead.
+
+**Option B — if you're comfortable with Terminal:** run
+`download-images.sh` once (see the walkthrough below) — it does the same
+thing automatically.
+
+Either way, once the `images` folder has the 19 files, upload it alongside
+the HTML files exactly as described below.
 
 ```
 chmod +x download-images.sh

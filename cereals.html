@@ -38,6 +38,16 @@
   .nav-links a:hover{ color:var(--gold); }
   .nav-links a:hover::after{ transform:scaleX(1); }
   @media(min-width:900px){ .nav-links{ display:flex; } }
+  .hamburger{ display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:10px; border:1px solid var(--line); background:var(--card); cursor:pointer; flex-shrink:0; -webkit-tap-highlight-color:transparent; }
+  .hamburger svg{ width:18px; height:18px; color:var(--ink); }
+  @media(min-width:900px){ .hamburger{ display:none; } }
+
+  .mobile-menu{ display:none; flex-direction:column; padding:4px 20px 14px; background:var(--card); border-bottom:1px solid var(--line); }
+  .mobile-menu.open{ display:flex; }
+  .mobile-menu a{ padding:14px 6px; text-decoration:none; color:var(--ink); font-size:16px; border-bottom:1px solid var(--line); }
+  .mobile-menu a:last-child{ border-bottom:none; }
+  @media(min-width:900px){ .mobile-menu{ display:none !important; } }
+
   .nav-cta{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; background:var(--ink); color:var(--bg); padding:9px 16px; border-radius:100px; text-decoration:none; white-space:nowrap; }
 
   .hero{ max-width:900px; margin:0 auto; padding:44px 20px 8px; }
@@ -224,50 +234,33 @@
     <a href="cereals.html">Cereal Aisle</a>
     <a href="why-we-do-this.html">Why We Do This</a>
   </div>
-  <a class="nav-cta" href="age-metrics.html">How scoring works</a>
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+    <a class="nav-cta" href="age-metrics.html">How scoring works</a>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="age-metrics.html">Age &amp; Metrics</a>
+    <a href="browse.html">Browse</a>
+    <a href="cereals.html">Cereal Aisle</a>
+    <a href="why-we-do-this.html">Why We Do This</a>
+  </div>
 
 <header class="hero">
-  <div class="eyebrow">Cereal Aisle &nbsp;·&nbsp; 18 of 29 verified</div>
+  <div class="eyebrow">Cereal Aisle</div>
   <h1>Kids' breakfast cereals, scored the same way.</h1>
   <p class="lede">
-    This page started as all 29 products from your Blinkit list. <b>18 remain</b> — 7 with every
-    ingredient and every nutrition figure independently confirmed, and 11 more with a fully confirmed
-    ingredient list but one or more nutrition figures estimated from a confirmed sibling product (each
-    marked <b>est.</b> on its card, with the exact estimate explained). The other 11 had neither
-    confirmed and were removed entirely. Every score uses the same
-    <a href="age-metrics.html">10-metric, age-banded rubric</a> as the rest of the site. <b>Buy on
-    Amazon</b> buttons show on Good and Excellent-tier products only.
+    Every product here is scored on the same <a href="age-metrics.html">10-metric, age-banded rubric</a>
+    as the rest of the site. Tap a card's photo to flip between front and back, and use the zoom icon for
+    a larger view. <b>Buy on Amazon</b> buttons show on Good and Excellent-tier products only.
   </p>
 </header>
 
 <div class="note-callout">
-  <b>Two confidence levels on this page.</b> Cards with no "est." flag have every number read from an
-  official source. Cards marked <b>est.</b> have a fully confirmed ingredient list — you can trust what's
-  in the label panel — but one or more nutrition figures (usually sugar or sodium) weren't published
-  anywhere searchable, so those specific numbers were estimated from a confirmed sibling product on this
-  page and the estimate is explained in that product's own ingredient panel text.
-</div>
-
-<div class="note-callout" style="margin-top:12px;">
-  <b>The 11 that were removed entirely</b> (not estimated — genuinely nothing found): Nestle Munch Choco
-  Fills, Little Joys Millet Chocos Crunch, Strawberry Puree Corn Flakes, 8AM Corn Flakes, Kwality
-  Multigrain Choco Flakes, Kwality Corn Flakes, Tata Soulfull Variety Pack Combo, Parle Hide &amp; Seek
-  Fills, All Bran Wheat Flakes, Protein Chocos, and Choco Fills Kids Cereal (Caramel Flavour) — mostly
-  smaller/budget brands or bundle packs with no nutrition panel published anywhere I could find. Full
-  list and reasoning in the README.
-</div>
-
-<div class="note-callout" style="margin-top:12px;">
-  <b>Tap any product's tab to flip between front and back, and use the zoom icon to pop it into a
-  larger view.</b> 14 of these 18 products now show real photos, pulled directly from Kellogg's own
-  India product pages, Slurrp Farm's site, and Bagrry's site — none of these block automated fetching
-  the way Blinkit and Amazon do. For Kellogg's products, the "back" side is the brand's own official
-  nutrition-label photo. For Slurrp Farm, the back image is a best guess at the second photo in their
-  product gallery (usually the back of pack, but not independently confirmed) — treat that one with
-  slightly less certainty than the Kellogg's ones. The remaining 4 products (Special K, Bagrry's back
-  side, and the two Tata Soulfull entries) still show the researched ingredient panel instead of a photo,
-  since no fetchable image source was found for them.
+  Cards marked <b>est.</b> have a fully confirmed ingredient list, but one or more nutrition figures
+  weren't published anywhere searchable — those are estimated from a comparable product, explained in
+  each card's ingredient text.
 </div>
 
 <div class="controls">
@@ -325,19 +318,19 @@ const ageRefs = {
    preservative/additive/transFat/baseIntegrity are fixed 0/1/2, same across ages.
    est:true = one or more figures estimated from a sibling product or category norm. */
 const products = [
-  { name:"Kellogg's Multigrain Chocos More Chocolatey, No-Maida", servingG:30, frontImg:"images/multigrain-chocos-more-chocolatey-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+  { name:"Kellogg's Multigrain Chocos More Chocolatey, No-Maida", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501750/prod_img-939867_en_in_8901499010728_2608201107_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501750/nutlabel-2720449_en_in_08901499010728_2509151235_n_1.jpg",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:false,
     ingredients:"Multigrain Flour Mix 64.8% (Wheat, Jowar, Rice, Corn), Sugar, Cocoa Solids, Minerals, Cereal Extract, Iodized Salt, Colours (INS 150a, INS 150d), Edible Vegetable Oil (Palmolein), Flavours (Nature Identical & Artificial – Cream), Vitamins, Antioxidant (INS 307b)." },
-  { name:"Kellogg's Original Corn Flakes", servingG:30, frontImg:"images/corn-flakes-original-front.png", backImg:"images/corn-flakes-original-back.png",
+  { name:"Kellogg's Original Corn Flakes", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501740/prod_img-940037_en_in_08901499008893_2606111119_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501740/nutlabel-2720454_en_in_08901499008893_2605141006_n_1.png",
     sugar:9.2, addedSugar:8.0, sodium:490, satFat:0.6, fiber:2.5, protein:6.7,
     preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
     ingredients:"Corn Grits (90%), Sugar, Cereal Extract, Iodized Salt, Vitamins, Antioxidant (INS 307b), Minerals. Nutrition confirmed from official India retailer listings (Zepto)." },
-  { name:"Slurrp Farm Choco Crunch Breakfast Cereal for Kids", servingG:30, frontImg:"images/slurrp-farm-choco-crunch-front.jpg", backImg:"images/slurrp-farm-choco-crunch-back.jpg",
+  { name:"Slurrp Farm Choco Crunch Breakfast Cereal for Kids", servingG:30, frontImg:"https://slurrpfarm.com/cdn/shop/files/1_Chocolate-Crunch_D2C_1500x1500_aec18ce4-038c-48b4-9b3d-08dc4895cb18.jpg", backImg:"https://slurrpfarm.com/cdn/shop/files/2_Chocolate-Crunch_D2C_1500x1500_55b6934b-3ba3-472b-9be5-f0425d2d27f3.jpg",
     sugar:24.6, addedSugar:20.9, sodium:3.0, satFat:0.8, fiber:4.9, protein:7.3,
     preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
     ingredients:"Wholegrain Millets — Sorghum (Jowar) & Finger Millet (Ragi) 23.7%, Raw Unrefined Sugar, Corn, Rice Flour, Cocoa, Rice Bran Oil, Vanilla Extract, Natural Flavours, Natural Vitamin E. No artificial colours, additives, or preservatives declared." },
-  { name:"Kellogg's Almonds & Honey Corn Flakes", servingG:30, frontImg:"images/almonds-honey-corn-flakes-front.png", backImg:"images/almonds-honey-corn-flakes-back.png",
+  { name:"Kellogg's Almonds & Honey Corn Flakes", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501741/prod_img-5547048_en_in_08901499008343_2606111122_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501741/nutlabel-2720451_en_in_08901499008343_2605141434_n_1.png",
     sugar:30.0, addedSugar:28.5, sodium:430, satFat:0.6, fiber:2.0, protein:6.5,
     preservative:2, additive:1, transFat:2, baseIntegrity:2, est:false,
     ingredients:"Corn Grits (62.7%), Sugar, Sliced Almonds (7.5%), Cereal Extract, Honey (1.7%), Iodized Salt, Dextrose, Vitamins, Antioxidant (INS 307b), Flavour (Nature Identical), Minerals, Colour (INS 150d). Nutrition confirmed from official India retailer listings (Zepto) — added sugar is 28.5g/100g, far higher than an earlier estimate on this card assumed. Corrected after verification." },
@@ -349,7 +342,7 @@ const products = [
     sugar:26.5, addedSugar:25.5, sodium:480, satFat:0.4, fiber:5.1, protein:8.2,
     preservative:2, additive:1, transFat:2, baseIntegrity:2, est:false,
     ingredients:"Rice (36.2%), Whole Wheat (33.2%), Sugar, Wheat Bran (4.7%), Liquid Glucose, Iodized Salt, Cereal Extract, Vitamins, Mineral, Antioxidant (INS 320 — BHA). Nutrition confirmed from official India retailer listings (Zepto). Important correction: an earlier version of this card used a lighter European formulation as a proxy (13g added sugar/100g); the actual India pack runs nearly double that at 25.5g/100g — almost as sweet as a chocolate cereal, despite Special K's 'diet' positioning." },
-  { name:"Bagrry's Corn Flakes Plus Original & Healthier (with Fibre Power)", servingG:30, frontImg:"images/bagrrys-corn-flakes-plus-front.jpg", backImg:"",
+  { name:"Bagrry's Corn Flakes Plus Original & Healthier (with Fibre Power)", servingG:30, frontImg:"https://bagrrys.com/cdn/shop/files/1_9_7033f41b-7f0e-49e9-9a76-51fff045763c.jpg", backImg:"",
     sugar:7.0, addedSugar:6.5, sodium:548, satFat:0.4, fiber:4.3, protein:8.7,
     preservative:2, additive:2, transFat:2, baseIntegrity:2, est:false,
     ingredients:"Corn Grit (89%), Sugar, Dietary Fibre 1.6% (Oligofructose 1.5%, Wheat Fibre 0.1%), Iodised Salt, Cereal Extract, Antioxidants (INS 322 & INS 307b). Nutrition confirmed from official India retailer listings (Zepto) — genuinely low sugar and solidly higher fiber than a standard corn flakes, matching the brand's fibre-forward positioning." },
@@ -358,41 +351,41 @@ const products = [
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Same confirmed formulation as Multigrain Chocos More Chocolatey — Multigrain Flour Mix 64.8% (Wheat, Jowar, Rice, Corn), Sugar, Cocoa Solids, Colours (INS 150a, INS 150d), Palmolein Oil, Antioxidant (INS 307b) — this is a bundled variety pack of that same base cereal, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
-  { name:"Kellogg's Multigrain Chocos Moons & Stars", servingG:30, frontImg:"images/multigrain-chocos-moons-stars-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+  { name:"Kellogg's Multigrain Chocos Moons & Stars", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501757/prod_img-940016_en_in_8901499010773_2608201110_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501750/nutlabel-2720449_en_in_08901499010728_2509151235_n_1.jpg",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos More Chocolatey — shaped as moons and stars, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
-  { name:"Kellogg's Multigrain Chocos Crunchy Bites Kids Cereal", servingG:30, frontImg:"images/multigrain-chocos-crunchy-bites-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+  { name:"Kellogg's Multigrain Chocos Crunchy Bites Kids Cereal", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501755/prod_img-939964_en_in_8901499010742_2608201114_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501750/nutlabel-2720449_en_in_08901499010728_2509151235_n_1.jpg",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos More Chocolatey, in a smaller bite shape, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
-  { name:"Kellogg's Chocos Multigrain Moons & Stars Chocos", servingG:30, frontImg:"images/multigrain-chocos-moons-stars-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+  { name:"Kellogg's Chocos Multigrain Moons & Stars Chocos", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501757/prod_img-940016_en_in_8901499010773_2608201110_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501750/nutlabel-2720449_en_in_08901499010728_2509151235_n_1.jpg",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
-  { name:"Kellogg's Multigrain Chocos Moons & Stars Kids Cereal", servingG:30, frontImg:"images/multigrain-chocos-moons-stars-front.png", backImg:"images/multigrain-chocos-more-chocolatey-back.jpg",
+  { name:"Kellogg's Multigrain Chocos Moons & Stars Kids Cereal", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501757/prod_img-940016_en_in_8901499010773_2608201110_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501750/nutlabel-2720449_en_in_08901499010728_2509151235_n_1.jpg",
     sugar:27.5, addedSugar:27.0, sodium:250, satFat:1.2, fiber:7.0, protein:9.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Same confirmed Multigrain Flour Mix formulation as Multigrain Chocos Moons & Stars, per Kellogg's own product-line page. Nutrition figures carried over from the confirmed sibling product." },
 
-  { name:"Kellogg's Froot Loops - Crunchy Multigrain Cereal", servingG:30, frontImg:"images/froot-loops-front.png", backImg:"images/froot-loops-back.png",
+  { name:"Kellogg's Froot Loops - Crunchy Multigrain Cereal", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_842566/prod_img-940332_in_08901499011176_2202030852_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_842566/nutlabel-842937_in_8901499011176_n_1.png",
     sugar:30.0, addedSugar:27.0, sodium:400, satFat:1.0, fiber:5.0, protein:6.0,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Multigrain Flour Mix 71.8% (Corn Flour 40.2%, Wheat Flour 18.4%, Whole Oats Flour 8.6%, Refined Wheat Flour/Maida 4.6%), Sugar, Iodized Salt, Minerals, Colours (INS 162, INS 160c(i), INS 100(i) — natural-derived: beetroot, paprika, turmeric extracts, not synthetic dyes), Vegetable Extract (Black Carrot Extract), Flavour (Nature Identical), Vitamins, Antioxidant (INS 307b). Full ingredient list confirmed from Kellogg's India's own site — no preservatives, and the colours are natural-sourced rather than the synthetic Red 40/Blue 1 used in the US version. Exact sugar/sodium grams for this India SKU still not published; those two figures remain estimated." },
-  { name:"Kellogg's Multigrain Plus Corn Flakes", servingG:30, frontImg:"images/multigrain-plus-corn-flakes-front.png", backImg:"images/multigrain-plus-corn-flakes-back.png",
+  { name:"Kellogg's Multigrain Plus Corn Flakes", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_7156697/prod_img-7157958_en_in_08901499027511_2602211000_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_7156697/nutlabel-7157988_en_in_08901499027511_2602271000_n_1.png",
     sugar:11.0, addedSugar:10.5, sodium:500, satFat:0.4, fiber:6.5, protein:8.5,
     preservative:2, additive:1, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Multigrain Mix 82.6% (Corn Grits & Meal 26.2%, Wheat & Wheat Flour 21.8%, Rice & Rice Flour 15%, Ragi Flour 13.1%, Rolled Barley 6.5%), Sugar, Cereal Extract, Oligofructose, Wheat Bran, Iodized Salt, Cocoa Solids, Vitamins, Flavours (Nature Identical & Artificial — Coconut), Antioxidant (INS 307b), Colour (INS 150d), Mineral. Full ingredient list confirmed from Amazon India's official listing — note the synthetic colour and artificial coconut flavouring, contrary to what its 'multigrain' positioning might suggest. Exact per-100g sugar/sodium not published; those figures remain estimated." },
-  { name:"Kellogg's Real Honey Corn Flakes", servingG:30, frontImg:"images/real-honey-corn-flakes-front.png", backImg:"images/real-honey-corn-flakes-back.png",
+  { name:"Kellogg's Real Honey Corn Flakes", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_2501743/prod_img-940055_en_in_08901499008695_2606111126_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_2501743/nutlabel-2720453_en_in_08901499008695_2605141502_n_1.png",
     sugar:27.0, addedSugar:26.0, sodium:450, satFat:0.2, fiber:2.2, protein:7.0,
     preservative:2, additive:2, transFat:2, baseIntegrity:2, est:true,
     ingredients:"Corn Grits, Sugar, Honey (2.8%), Cereal Extract, Iodized Salt, Vitamins, Antioxidant (INS 307b), Flavour (Nature Identical), Minerals. Full ingredient list confirmed from Kellogg's India's own site — no synthetic colour listed. Exact per-100g sugar/sodium not published for this specific variant; figures estimated from its confirmed sibling, Almonds & Honey Corn Flakes, minus the almond content." },
 
-  { name:"Kellogg's Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)", servingG:30, frontImg:"images/chocos-fills-double-chocolaty-front.png", backImg:"images/chocos-fills-double-chocolaty-back.jpg",
+  { name:"Kellogg's Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside)", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_6661876/prod_img-939995_en_in_08901499009623_2508221748_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_6661876/nutlabel-6661881_en_in_08901499009623_2508221748_n_1.jpg",
     sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
     preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Multigrain Flour Mix 53.7% (Wheat Flour 35.7%, Whole Oats Flour 9%, Corn Meal 9%), Choco Cream {Sugar, Edible Vegetable Oil (Sunflower Oil, Palm Oil), Cocoa Solids 6.3%, Milk Solids, Emulsifier (INS 322(i)), Flavour (Natural)}, Sugar, Cocoa Solids 5%, Iodized Salt, Antioxidant (INS 307b), Vitamins. Full ingredient list confirmed from Kellogg's India's own site. Exact per-100g sugar/fat figures not published; estimated from the category (cream-filled chocos typically run higher fat/sugar than plain)." },
-  { name:"Kellogg's Chocos Fills Double Chocolaty Cereal", servingG:30, frontImg:"images/chocos-fills-double-chocolaty-front.png", backImg:"images/chocos-fills-double-chocolaty-back.jpg",
+  { name:"Kellogg's Chocos Fills Double Chocolaty Cereal", servingG:30, frontImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/product/product_6661876/prod_img-939995_en_in_08901499009623_2508221748_p_1.png", backImg:"https://images.kglobalservices.com/www.kelloggs.in/en_in/productitemnutrition/product_6661876/nutlabel-6661881_en_in_08901499009623_2508221748_n_1.jpg",
     sugar:29.0, addedSugar:27.0, sodium:280, satFat:4.5, fiber:4.0, protein:7.0,
     preservative:2, additive:2, transFat:2, baseIntegrity:1, est:true,
     ingredients:"Same confirmed formulation as Double Chocolaty Fills Chocos (Crunchy Outside, Creamy Inside) — see that entry for the full confirmed ingredient list. Nutrition figures carried over from that sibling product." },
@@ -662,5 +655,24 @@ document.addEventListener('keydown', (e) => {
 });
 </script>
 
+<script>
+function toggleMobileMenu(){
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.querySelector('.hamburger');
+  const isOpen = menu.classList.toggle('open');
+  if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.querySelector('.hamburger');
+  if (!menu || !menu.classList.contains('open')) return;
+  if (menu.contains(e.target) || (btn && btn.contains(e.target))) return;
+  menu.classList.remove('open');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+});
+document.querySelectorAll('#mobileMenu a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+});
+</script>
 </body>
 </html>
