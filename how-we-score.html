@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How we score — KidPoshan</title>
+<meta name="description" content="The full Poshan Score rubric: what adds points, what removes them, and what the score does not tell you.">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:1.6rem">
+  <h1 style="font-size:2rem">How the Poshan Score works</h1>
+  <p class="lede">Every food on this site runs through the same rubric. Nothing is scored by hand, and no brand can pay to move a number. This page is the whole method, generated from the same rules the site runs on — so it cannot quietly drift out of date.</p>
+
+  <section style="padding-top:.4rem">
+    <div class="sec-head"><h2>Two measuring sticks</h2></div>
+    <p class="muted">A packet prints its numbers per 100 g. A cooked meal is judged as the plate a child actually eats. Scoring both the same way would punish home food for being mostly water, so each gets its own thresholds. The bands at the end are identical.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What removes points</h2></div>
+    <table class="kv" id="minus"></table>
+    <p class="small muted">Sugar here means added sugar, not the sugar already in fruit or milk. That distinction is why a fruit puree and a fruit drink end up in very different places.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What adds points</h2></div>
+    <table class="kv" id="plus"></table>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What the bands mean</h2></div>
+    <div class="grid grid--4" id="bands"></div>
+    <p class="small muted">A low score is not a warning label. It means the food belongs in the occasional column rather than the weekly shop.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Try it on a real product</h2></div>
+    <p class="muted small" style="margin-top:-.6rem">Pick anything we have scored and watch the same arithmetic run, line by line.</p>
+    <label class="pref" style="max-width:440px"><span>Product</span><select id="demo"></select></label>
+    <div class="pick__why" style="margin-top:1rem"><div class="bd" id="demo-out"></div></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What the score does not tell you</h2></div>
+    <p>It reads the label, not your child. It cannot see an allergy, a doctor's instruction, or the fact that your seven-year-old will only eat three things this month. It says nothing about taste, cost per serving, or how a food fits the rest of the day. Treat it as a shortcut through the ingredient list, not a verdict.</p>
+    <p class="small muted">Thresholds are set against ICMR-NIN 2020 recommended intakes for Indian children, FSSAI labelling rules and WHO guidance on free sugars. When those change, this page and every score on the site change with them.</p>
+  </section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/engine.js"></script>
+<script>
+mountHeader("How we score");
+
+const P = SCORE_PROFILES.pack, M = SCORE_PROFILES.meal;
+const head = `<tr><th></th><td><b>Packaged, per 100 g</b></td><td><b>Home-cooked, per serving</b></td></tr>`;
+const row = (what, a, b) => `<tr><th>${what}</th><td>${a}</td><td>${b}</td></tr>`;
+
+document.getElementById("minus").innerHTML = head +
+  row("Added sugar", `&minus;${P.sugarWeight} per gram, to a limit of &minus;${P.sugarCap}`, `&minus;${M.sugarWeight} per gram, to a limit of &minus;${M.sugarCap}`) +
+  row("Added sugar in drinks", `Counted 3.4&times; over — a gram in a glass goes down faster than a gram in a dry mix`, `Not applicable`) +
+  row("Sodium", `First ${P.sodiumFree} mg free, then &minus;1 per ${P.sodiumDivisor} mg, to a limit of &minus;${P.sodiumCap}`, `First ${M.sodiumFree} mg free, then &minus;1 per ${M.sodiumDivisor} mg, to a limit of &minus;${M.sodiumCap}`) +
+  row("Saturated fat", `&minus;${P.satFatWeight} per gram, to a limit of &minus;${P.satFatCap}`, `&minus;${M.satFatWeight} per gram, to a limit of &minus;${M.satFatCap}`) +
+  row("Artificial additives", `&minus;${P.additiveEach} each, to a limit of &minus;${P.additiveCap}`, `&minus;${M.additiveEach} each, to a limit of &minus;${M.additiveCap}`) +
+  row("Palm oil", `&minus;${P.palmOil}`, `&minus;${M.palmOil}`) +
+  row("Refined flour base", `&minus;${P.maida}`, `&minus;${M.maida}`);
+
+document.getElementById("plus").innerHTML = head +
+  row("Starting point", `${P.base}`, `${M.base}`) +
+  row("Protein", `+${P.proteinWeight} per gram, to a limit of +${P.proteinCap}`, `+${M.proteinWeight} per gram, to a limit of +${M.proteinCap}`) +
+  row("Fibre", `+${P.fibreWeight} per gram, to a limit of +${P.fibreCap}`, `+${M.fibreWeight} per gram, to a limit of +${M.fibreCap}`) +
+  row("Whole grain base", `+${P.wholeGrain}`, `+${M.wholeGrain}`) +
+  row("Nothing artificial at all", `+${P.cleanLabel}`, `+${M.cleanLabel}`);
+
+const BANDS = [
+  [92, "Excellent", "excellent", "Feed it as often as your child will eat it."],
+  [70, "Good", "good", "Fine for regular use. Watch the portion, not the ingredient list."],
+  [48, "Fair", "fair", "A couple of times a week rather than daily."],
+  [12, "Occasional", "limit", "Birthdays, long journeys and the odd bad Tuesday."]
+];
+document.getElementById("bands").innerHTML = BANDS.map(([n, label, id, text]) => `
+  <article class="card" style="padding:1rem">
+    <div class="scorebox scorebox--${id}"><span class="scorebox__n">${n}</span><span class="scorebox__b">${label}</span></div>
+    <p class="small muted" style="margin:.7rem 0 0">${text}</p>
+  </article>`).join("");
+
+const demo = document.getElementById("demo");
+demo.innerHTML = PRODUCTS.map(scoreProduct).sort((a, b) => b.score - a.score)
+  .map(p => `<option value="${p.id}">${p.brand} — ${p.name}</option>`).join("");
+
+function drawDemo() {
+  const p = scoreProduct(PRODUCTS.find(x => x.id === demo.value));
+  document.getElementById("demo-out").innerHTML =
+    `<div class="bd__row pos"><span>Starting point, ${P.label}</span><b>${p.scoreBase}</b></div>` +
+    p.breakdown.map(l => `<div class="bd__row ${l.delta >= 0 ? "pos" : "neg"}">
+      <span>${l.label}</span><b>${l.delta > 0 ? "+" : ""}${Math.round(l.delta)}</b></div>`).join("") +
+    `<div class="bd__row"><span><b>Poshan Score</b></span><b>${p.score} &middot; ${p.band.label}</b></div>`;
+}
+demo.addEventListener("change", drawDemo);
+drawDemo();
+
+mountFooter();
+</script>
+</body>
+</html>

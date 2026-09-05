@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Packaged foods, scored — KidPoshan</title>
+<meta name="description" content="Packaged kids' foods scored on sugar, sodium, saturated fat, additives and ingredient quality.">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:1.6rem">
+  <h1 style="font-size:2rem">Packaged foods, scored</h1>
+  <p class="muted">Every product below is scored on the same rubric. A low score is not a warning — it is a reason to keep it occasional.</p>
+
+  <div class="tabrow" style="margin:1.2rem 0 .6rem">
+    <span class="tabrow__label">Child's age</span>
+    <div class="tabrow__scroll" id="f-age" role="tablist" aria-label="Age band"></div>
+  </div>
+
+  <div class="prefbar">
+    <label class="pref"><span>Category</span><select id="f-cat"></select></label>
+    <label class="pref"><span>Minimum score</span>
+      <select id="f-min">
+        <option value="0">Show everything</option>
+        <option value="65">Good and above</option>
+        <option value="80">Excellent only</option>
+      </select>
+    </label>
+    <label class="pref"><span>Sort by</span>
+      <select id="f-sort">
+        <option value="score">Score, high to low</option>
+        <option value="price">Price, low to high</option>
+        <option value="name">Name</option>
+      </select>
+    </label>
+  </div>
+
+  <p class="small muted" id="count"></p>
+  <div class="grid grid--4" id="list" style="padding-bottom:2rem"></div>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/engine.js"></script>
+<script>
+mountHeader("Products");
+
+const cats = [...new Set(PRODUCTS.map(p => p.category))].sort();
+document.getElementById("f-cat").innerHTML =
+  `<option value="">All categories</option>` + cats.map(c => `<option>${c}</option>`).join("");
+
+let ageFilter = ""; // "" = all ages
+const ageBar = document.getElementById("f-age");
+ageBar.innerHTML =
+  `<button type="button" class="tab" data-group="age" data-age="" aria-selected="true"><span>All ages</span></button>` +
+  AGE_BANDS.map(b => `
+    <button type="button" class="tab" data-group="age" data-age="${b.id}" aria-selected="false">
+      <span class="tab__icon">${ICON.child}</span><span>${b.label}</span>
+    </button>`).join("");
+ageBar.querySelectorAll(".tab").forEach(btn => btn.addEventListener("click", () => {
+  ageBar.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", "false"));
+  btn.setAttribute("aria-selected", "true");
+  ageFilter = btn.dataset.age;
+  draw();
+}));
+
+function draw() {
+  const cat  = document.getElementById("f-cat").value;
+  const age  = ageFilter;
+  const min  = Number(document.getElementById("f-min").value);
+  const sort = document.getElementById("f-sort").value;
+
+  let rows = PRODUCTS.map(scoreProduct)
+    .filter(p => (!cat || p.category === cat))
+    .filter(p => (!age || p.ages.includes(age)))
+    .filter(p => p.score >= min);
+
+  rows.sort((a, b) =>
+    sort === "price" ? a.price - b.price :
+    sort === "name"  ? a.name.localeCompare(b.name) :
+                       b.score - a.score);
+
+  document.getElementById("count").textContent =
+    `${rows.length} product${rows.length === 1 ? "" : "s"}`;
+
+  document.getElementById("list").innerHTML = rows.length ? rows.map((p, i) => `
+    <article class="card prod">
+      ${thumb(p.name, i)}
+      <div class="prod__body">
+        <div class="prod__brand">${p.brand}</div>
+        <div class="prod__name">${p.name}</div>
+        <div class="prod__row">
+          ${scoreBadge(p.score, p.band)}
+          <div>
+            <div class="prod__price">₹${p.price}</div>
+            <div class="small muted">${p.pack}</div>
+          </div>
+        </div>
+      </div>
+      <div class="prod__foot">
+        <a class="btn btn--sm" href="${p.partnerUrl}" rel="sponsored nofollow noopener" target="_blank">Buy on ${p.partner}</a>
+        <a class="btn btn--ghost btn--sm" href="product.html?id=${p.id}">See the score</a>
+      </div>
+    </article>`).join("")
+    : `<div class="empty"><h3>Nothing matches these filters</h3>
+         <p class="small muted">Widen the score range or clear the category to see more.</p></div>`;
+}
+
+["f-cat","f-min","f-sort"].forEach(id =>
+  document.getElementById(id).addEventListener("change", draw));
+draw();
+mountFooter();
+</script>
+</body>
+</html>

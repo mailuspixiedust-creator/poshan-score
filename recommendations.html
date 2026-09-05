@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meal ideas — KidPoshan</title>
+<meta name="description" content="Meal recommendations matched to your child's age, the time of day and the season.">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:1.6rem">
+  <div id="prefbar"></div>
+  <p class="small muted" id="context" style="margin-top:-.8rem"></p>
+
+  <section style="padding-top:.6rem">
+    <div class="sec-head"><h2>Today's recommendation</h2></div>
+    <div id="pick"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Other good choices</h2></div>
+    <div class="grid grid--3" id="alts"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Need to buy something?</h2>
+      <a href="products.html">All products</a>
+    </div>
+    <p class="small muted" style="margin-top:-.6rem">Packaged options for this meal, scored on the same rubric.</p>
+    <div class="grid grid--3" id="prods"></div>
+  </section>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/engine.js"></script>
+<script>
+mountHeader("Meal ideas");
+
+/* Some combinations are empty because they should be, not because the data is
+   thin. Say which, rather than making a parent wonder what they got wrong. */
+function emptyTitle(p) {
+  const infant = bandForAge(p.age) === "6-12m";
+  if (infant && p.slot === "tiffin") return "Children this age don't carry a tiffin box";
+  if (infant && p.slot === "snack")  return "At this age, milk and meals are the whole plan";
+  return "Nothing matches this combination yet";
+}
+
+function emptyBody(p) {
+  const infant = bandForAge(p.age) === "6-12m";
+  if (infant && p.slot === "tiffin")
+    return "Before their first birthday, food is fed at home, freshly made. Switch to breakfast or dinner for ideas that suit this age.";
+  if (infant && p.slot === "snack")
+    return "Under one, most of the day's energy still comes from milk feeds, with small tastes of solid food at mealtimes rather than snacks in between. Ask your paediatrician before adding extras.";
+  return "We haven't added " + labelFor(MEAL_SLOTS, p.slot).toLowerCase() + " ideas for this age band yet. Try a different meal, or browse everything.";
+}
+
+function render(p) {
+  const band = bandForAge(p.age);
+  document.getElementById("context").textContent =
+    `Showing ${labelFor(MEAL_SLOTS, p.slot).toLowerCase()} ideas for a child in the ${labelFor(AGE_BANDS, band)} band, in ${labelFor(SEASONS, p.season).toLowerCase()}.`;
+
+  const meals = recommendMeals(p);
+  const pickEl = document.getElementById("pick");
+
+  if (!meals.length) {
+    pickEl.innerHTML = `<div class="empty">
+      <h3>${emptyTitle(p)}</h3>
+      <p class="muted small">${emptyBody(p)}</p>
+      <a class="btn btn--ghost btn--sm" href="search.html">Browse all foods</a></div>`;
+    document.getElementById("alts").innerHTML = "";
+  } else {
+    const top = meals[0];
+    pickEl.innerHTML = `
+      <div class="pick">
+        <article class="card pick__main">
+          ${thumb(top.name, 2)}
+          <div class="pick__text">
+            <h2 style="font-size:1.5rem">${top.name}</h2>
+            <div style="margin:.2rem 0 .6rem">${scoreChip(top.score, top.band)}</div>
+            <p class="muted" style="margin-bottom:.6rem">${top.blurb}</p>
+            <ul class="checks">${top.why.map(w => `<li>${w}</li>`).join("")}</ul>
+            <div class="mealcard__meta">
+              <span class="pill">${top.prepMins} mins</span>
+              <span class="pill">${labelFor(AGE_BANDS, bandForAge(p.age))}</span>
+              <span class="pill">${top.diet === "veg" ? "Veg" : "Contains egg"}</span>
+            </div>
+          </div>
+        </article>
+        <aside class="pick__why">
+          <h3>Why this scores ${top.score}</h3>
+          <div class="bd">
+            <div class="bd__row"><span>Starting point</span><b>${top.scoreBase}</b></div>
+            ${top.breakdown.map(l => `<div class="bd__row ${l.delta > 0 ? "pos" : "neg"}">
+                <span>${l.label}</span><b>${l.delta > 0 ? "+" : ""}${Math.round(l.delta)}</b></div>`).join("")}
+          </div>
+          <p class="small muted" style="margin-top:.8rem">Scored per 100 g against our published rubric. <a href="how-we-score.html">How we score</a></p>
+          <button class="btn btn--sm" id="add-plan">Add to planner</button>
+        </aside>
+      </div>`;
+
+    document.getElementById("alts").innerHTML = meals.slice(1, 4).map((m, i) => `
+      <article class="card">
+        ${thumb(m.name, i + 5)}
+        <div class="mealcard__body">
+          <h3>${m.name}</h3>
+          <p class="small muted" style="margin:0">${m.blurb}</p>
+          <div class="mealcard__meta">${scoreChip(m.score, m.band)}<span class="pill">${m.prepMins} mins</span></div>
+        </div>
+      </article>`).join("") || `<div class="empty small muted">Only one idea matches right now.</div>`;
+
+    const addBtn = document.getElementById("add-plan");
+    if (addBtn) addBtn.addEventListener("click", () => {
+      try {
+        const key = "kidposhan.plan";
+        const plan = JSON.parse(window.localStorage.getItem(key) || "{}");
+        const day = new Date().toLocaleDateString("en-IN", { weekday: "long" });
+        plan[day] = { ...(plan[day] || {}), [p.slot]: top.name };
+        window.localStorage.setItem(key, JSON.stringify(plan));
+        addBtn.textContent = "Added to " + day;
+      } catch (e) { addBtn.textContent = "Planner unavailable in this browser"; }
+    });
+  }
+
+  const prods = recommendProducts(p);
+  document.getElementById("prods").innerHTML = prods.length ? prods.map((pr, i) => `
+    <article class="card prod">
+      ${thumb(pr.name, i + 9)}
+      <div class="prod__body">
+        <div class="prod__brand">${pr.brand}</div>
+        <div class="prod__name">${pr.name}</div>
+        <div class="prod__row">
+          ${scoreBadge(pr.score, pr.band)}
+          <span class="prod__price">₹${pr.price}</span>
+          <span class="pill">${pr.pack}</span>
+        </div>
+      </div>
+      <div class="prod__foot">
+        <a class="btn btn--sm" href="${pr.partnerUrl}" rel="sponsored nofollow noopener" target="_blank">Buy on ${pr.partner}</a>
+        <a class="btn btn--ghost btn--sm" href="product.html?id=${pr.id}">See the score</a>
+      </div>
+    </article>`).join("")
+    : `<div class="empty small muted">No packaged products matched this age and meal. That is often the right answer — cook instead.</div>`;
+}
+
+mountPrefBar(document.getElementById("prefbar"), render, { compact: true });
+render(getPrefs());
+mountFooter();
+</script>
+</body>
+</html>

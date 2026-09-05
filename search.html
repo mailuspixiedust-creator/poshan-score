@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search — KidPoshan</title>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:1.6rem">
+  <h1 style="font-size:2rem">Search foods and products</h1>
+  <p class="muted">Search by dish, brand, category or an ingredient you saw on a label.</p>
+
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem">
+    <input class="field" id="q" style="flex:1;min-width:260px" placeholder="Try 'ragi', 'palm oil', 'tiffin' or 'oats'" autocomplete="off">
+    <button class="btn" id="btn">Search</button>
+  </div>
+  <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.6rem" id="quick"></div>
+
+  <div id="out"></div>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/engine.js"></script>
+<script>
+mountHeader("Search");
+
+const QUICK = ["Low sugar cereals", "Healthy snacks", "Tiffin", "High protein", "Ragi", "Palm oil"];
+document.getElementById("quick").innerHTML =
+  QUICK.map(q => `<button class="btn btn--ghost btn--sm" data-q="${q}">${q}</button>`).join("");
+
+const qEl = document.getElementById("q");
+const out = document.getElementById("out");
+
+function run() {
+  const term = qEl.value.trim();
+  history.replaceState(null, "", term ? "?q=" + encodeURIComponent(term) : "search.html");
+
+  if (!term) {
+    out.innerHTML = `<div class="empty"><h3>Start typing to search</h3>
+      <p class="small muted">Every result carries the same Poshan Score you see elsewhere on the site.</p></div>`;
+    return;
+  }
+
+  const { meals, products } = searchAll(term);
+
+  if (!meals.length && !products.length) {
+    out.innerHTML = `<div class="empty"><h3>No matches for “${term}”</h3>
+      <p class="small muted">We may not have scored it yet. Try a broader word — a grain, a brand or a meal.</p></div>`;
+    return;
+  }
+
+  out.innerHTML = `
+    ${meals.length ? `<section style="padding-top:0">
+      <div class="sec-head"><h2>Meal ideas (${meals.length})</h2></div>
+      <div class="grid grid--4">${meals.map((m, i) => `
+        <article class="card">
+          ${thumb(m.name, i)}
+          <div class="mealcard__body">
+            <h3>${m.name}</h3>
+            <p class="small muted" style="margin:0">${m.blurb}</p>
+            <div class="mealcard__meta">${scoreChip(m.score, m.band)}<span class="pill">${m.prepMins} mins</span></div>
+          </div>
+        </article>`).join("")}</div></section>` : ""}
+
+    ${products.length ? `<section>
+      <div class="sec-head"><h2>Products (${products.length})</h2></div>
+      <div class="grid grid--4">${products.map((p, i) => `
+        <article class="card prod">
+          ${thumb(p.name, i + 3)}
+          <div class="prod__body">
+            <div class="prod__brand">${p.brand}</div>
+            <div class="prod__name">${p.name}</div>
+            <div class="prod__row">${scoreBadge(p.score, p.band)}<span class="prod__price">₹${p.price}</span></div>
+          </div>
+          <div class="prod__foot">
+            <a class="btn btn--sm" href="${p.partnerUrl}" rel="sponsored nofollow noopener" target="_blank">Buy on ${p.partner}</a>
+            <a class="btn btn--ghost btn--sm" href="product.html?id=${p.id}">See the score</a>
+          </div>
+        </article>`).join("")}</div></section>` : ""}`;
+}
+
+document.getElementById("btn").addEventListener("click", run);
+qEl.addEventListener("input", run);
+document.getElementById("quick").addEventListener("click", e => {
+  const b = e.target.closest("[data-q]");
+  if (!b) return;
+  qEl.value = b.dataset.q;
+  run();
+});
+
+qEl.value = new URLSearchParams(location.search).get("q") || "";
+run();
+mountFooter();
+</script>
+</body>
+</html>

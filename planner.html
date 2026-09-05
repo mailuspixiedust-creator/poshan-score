@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly planner — KidPoshan</title>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:1.6rem">
+  <h1 style="font-size:2rem">Weekly planner</h1>
+  <p class="muted">Fill a week in one go, or edit any cell. The plan stays on this device.</p>
+
+  <div id="prefbar"></div>
+
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem">
+    <button class="btn" id="fill">Fill the week for me</button>
+    <button class="btn btn--ghost" id="clear">Clear the plan</button>
+    <button class="btn btn--ghost" id="list">Shopping list</button>
+  </div>
+
+  <div style="overflow-x:auto"><table class="plan" id="grid"></table></div>
+  <div id="shopping"></div>
+</main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/engine.js"></script>
+<script>
+mountHeader("Planner");
+
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const PLAN_KEY = "kidposhan.plan";
+let memPlan = null;
+
+function getPlan() {
+  if (memPlan) return memPlan;
+  try { memPlan = JSON.parse(window.localStorage.getItem(PLAN_KEY) || "{}"); }
+  catch (e) { memPlan = {}; }
+  return memPlan;
+}
+function savePlan(p) {
+  memPlan = p;
+  try { window.localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+}
+
+function draw() {
+  const plan = getPlan();
+  const grid = document.getElementById("grid");
+  grid.innerHTML =
+    `<tr><th></th>${MEAL_SLOTS.map(s => `<th>${s.label}</th>`).join("")}</tr>` +
+    DAYS.map(d => `<tr><th>${d}</th>${MEAL_SLOTS.map(s => {
+      const v = (plan[d] || {})[s.id];
+      return `<td contenteditable="true" data-day="${d}" data-slot="${s.id}">${v || `<span class="muted">—</span>`}</td>`;
+    }).join("")}</tr>`).join("");
+
+  grid.querySelectorAll("td").forEach(td => td.addEventListener("blur", () => {
+    const p = getPlan();
+    const txt = td.textContent.trim().replace(/^—$/, "");
+    p[td.dataset.day] = { ...(p[td.dataset.day] || {}) };
+    if (txt) p[td.dataset.day][td.dataset.slot] = txt;
+    else delete p[td.dataset.day][td.dataset.slot];
+    savePlan(p);
+  }));
+}
+
+document.getElementById("fill").addEventListener("click", () => {
+  const prefs = getPrefs();
+  const plan = {};
+  DAYS.forEach((d, di) => {
+    plan[d] = {};
+    MEAL_SLOTS.forEach(s => {
+      const opts = recommendMeals({ ...prefs, slot: s.id }, 6);
+      if (opts.length) plan[d][s.id] = opts[di % opts.length].name; // rotate so the week varies
+    });
+  });
+  savePlan(plan);
+  draw();
+});
+
+document.getElementById("clear").addEventListener("click", () => { savePlan({}); draw(); document.getElementById("shopping").innerHTML = ""; });
+
+document.getElementById("list").addEventListener("click", () => {
+  const plan = getPlan();
+  const names = new Set();
+  Object.values(plan).forEach(day => Object.values(day).forEach(v => names.add(v)));
+  if (!names.size) {
+    document.getElementById("shopping").innerHTML = `<div class="empty"><h3>The plan is empty</h3><p class="small muted">Fill the week first, then the list writes itself.</p></div>`;
+    return;
+  }
+  const wanted = MEALS.filter(m => names.has(m.name));
+  document.getElementById("shopping").innerHTML = `
+    <section><div class="sec-head"><h2>This week's meals</h2></div>
+    <ul class="ings">${[...names].map(n => `<li class="pill">${n}</li>`).join("")}</ul>
+    <p class="small muted" style="margin-top:1rem">${wanted.length} of these have a full nutrition breakdown on the meal ideas page.</p></section>`;
+});
+
+mountPrefBar(document.getElementById("prefbar"), () => {}, { compact: true });
+draw();
+mountFooter();
+</script>
+</body>
+</html>

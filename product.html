@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product details — KidPoshan</title>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<main class="wrap" style="padding-top:1.6rem" id="root"></main>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/engine.js"></script>
+<script>
+mountHeader("Products");
+
+const id = new URLSearchParams(location.search).get("id");
+const found = PRODUCTS.find(p => p.id === id);
+const root = document.getElementById("root");
+
+if (!found) {
+  root.innerHTML = `<div class="empty" style="margin:3rem 0">
+    <h2>We couldn't find that product</h2>
+    <p class="muted small">It may have been renamed or removed. Browse the full list instead.</p>
+    <a class="btn" href="products.html">See all products</a></div>`;
+} else {
+  const p = scoreProduct(found);
+  const n = p.nutrition;
+  const sugarPer100 = n.addedSugar;
+  const verdict =
+    p.band.id === "excellent" ? "A dependable everyday choice for this age." :
+    p.band.id === "good"      ? "Fine for regular use — just keep an eye on the portion." :
+    p.band.id === "fair"      ? "Works a couple of times a week, not daily." :
+                                "Best kept for occasions rather than the weekly shop.";
+
+  root.innerHTML = `
+    <p class="small muted"><a href="products.html">Products</a> / ${p.category}</p>
+    <div class="detail">
+      <div>
+        <div class="card" style="padding:0;overflow:hidden;margin-bottom:1.2rem">${thumb(p.name, 3)}</div>
+
+        <h2>What's inside</h2>
+        <p class="small muted" style="margin-bottom:.3rem">Listed in the order printed on the pack — the first ingredient is the largest by weight.</p>
+        <ul class="ings">${p.ingredients.map(i => `<li class="pill">${i}</li>`).join("")}</ul>
+
+        <h2 style="margin-top:1.6rem">Nutrition per 100 g</h2>
+        <table class="kv">
+          <tr><th>Energy</th><td>${n.energy} kcal</td></tr>
+          <tr><th>Protein</th><td>${n.protein} g</td></tr>
+          <tr><th>Carbohydrate</th><td>${n.carbs} g</td></tr>
+          <tr><th>&nbsp;&nbsp;of which total sugar</th><td>${n.totalSugar} g</td></tr>
+          <tr><th>&nbsp;&nbsp;of which added sugar</th><td>${n.addedSugar} g</td></tr>
+          <tr><th>Fat</th><td>${n.fat} g</td></tr>
+          <tr><th>&nbsp;&nbsp;of which saturated</th><td>${n.satFat} g</td></tr>
+          <tr><th>Fibre</th><td>${n.fibre} g</td></tr>
+          <tr><th>Sodium</th><td>${n.sodium} mg</td></tr>
+        </table>
+
+        <h2 style="margin-top:1.6rem">What this means for your child</h2>
+        <p>${verdict} ${sugarPer100 >= 10
+            ? `At ${sugarPer100} g of added sugar per 100 g, a 30 g serving uses a meaningful share of the free-sugar allowance WHO suggests for children.`
+            : `Added sugar is low here at ${sugarPer100} g per 100 g, which is what keeps the score where it is.`}
+          ${n.sodium > 400 ? `Sodium is on the higher side, so pair it with a low-salt rest of the plate.` : ``}</p>
+        <p class="small muted">Suitable for: ${p.ages.map(a => labelFor(AGE_BANDS, a)).join(", ")}. Usually eaten at: ${p.slots.map(s => labelFor(MEAL_SLOTS, s).toLowerCase()).join(", ")}.</p>
+      </div>
+
+      <aside>
+        <div class="card" style="padding:1.2rem">
+          <div class="prod__brand">${p.brand}</div>
+          <h1 style="font-size:1.4rem;margin:.15rem 0 .7rem">${p.name}</h1>
+          <div class="prod__row" style="margin-bottom:.9rem">
+            ${scoreBadge(p.score, p.band)}
+            <div><div class="prod__price">₹${p.price}</div><div class="small muted">${p.pack}</div></div>
+          </div>
+          <a class="btn" style="width:100%;justify-content:center" href="${p.partnerUrl}" rel="sponsored nofollow noopener" target="_blank">Buy on ${p.partner}</a>
+          <p class="small muted" style="margin:.7rem 0 0">This is a partner link. KidPoshan may earn a commission; the score is set before any partnership.</p>
+        </div>
+
+        <div class="pick__why" style="margin-top:1rem">
+          <h3>How the score of ${p.score} was reached</h3>
+          <p class="small muted" style="margin:0">Every food starts at 58, per 100 g.</p>
+          <div class="bd">
+            <div class="bd__row"><span>Starting point</span><b>${p.scoreBase}</b></div>
+            ${p.breakdown.map(l => `<div class="bd__row ${l.delta > 0 ? "pos" : "neg"}">
+              <span>${l.label}</span><b>${l.delta > 0 ? "+" : ""}${Math.round(l.delta)}</b></div>`).join("")}
+            <div class="bd__row"><span><b>Poshan Score</b></span><b>${p.score}</b></div>
+          </div>
+          <p class="small muted" style="margin-top:.8rem"><a href="how-we-score.html">Read the full rubric</a></p>
+        </div>
+      </aside>
+    </div>
+
+    <section>
+      <div class="sec-head"><h2>Better or similar in ${p.category.toLowerCase()}</h2></div>
+      <div class="grid grid--3" id="similar"></div>
+    </section>`;
+
+  const similar = PRODUCTS.filter(x => x.category === p.category && x.id !== p.id)
+    .map(scoreProduct).sort((a, b) => b.score - a.score).slice(0, 3);
+
+  document.getElementById("similar").innerHTML = similar.length ? similar.map((s, i) => `
+    <article class="card prod">
+      ${thumb(s.name, i + 4)}
+      <div class="prod__body">
+        <div class="prod__brand">${s.brand}</div>
+        <div class="prod__name">${s.name}</div>
+        <div class="prod__row">${scoreBadge(s.score, s.band)}<span class="prod__price">₹${s.price}</span></div>
+      </div>
+      <div class="prod__foot"><a class="btn btn--ghost btn--sm" href="product.html?id=${s.id}">See the score</a></div>
+    </article>`).join("")
+    : `<div class="empty small muted">This is the only product we've scored in this category so far.</div>`;
+}
+
+mountFooter();
+</script>
+</body>
+</html>
