@@ -49,3 +49,4 @@ They exist separately because a cooked plate is mostly water; scoring it against
 Change a number there and every score on the site updates. `how-we-score.html` reads these values at runtime and renders the tables from them, so the published rubric cannot drift away from the code.
 
 Never hand-write a score into `data.js`. The breakdown shown to parents is the arithmetic itself — if the two disagree, the trust promise on the front page is broken.
+
